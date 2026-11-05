@@ -1,0 +1,116 @@
+---
+import Pic from './Pic.astro';
+import { home, google } from '../data/site';
+---
+<section class="hero" data-hero>
+  <div class="photo" data-photo><Pic k="hamilton-ground-floor-1" alt="Living room of a Blue Palm serviced apartment in Pontcanna, Cardiff" eager sizes="100vw" w={1920} /></div>
+  <div class="shade" aria-hidden="true"></div>
+
+  <!-- Signature intro: the round Blue Palm logo becomes a window and flies past the camera into the hero photo -->
+  <div class="intro" data-intro aria-hidden="true">
+    <div class="hole" data-hole>
+      <div class="disc" data-disc><img src="/img/brand/wordmark-white.png" alt="" width="722" height="441" /></div>
+    </div>
+  </div>
+
+  <div class="wrap content">
+    <h1 data-h>
+      <span class="l1" data-l>{home.h1a}</span>
+      <span class="l2" data-l>{home.h1b}</span>
+    </h1>
+    <p class="lede" data-l>{home.lede}</p>
+    <div class="ctas" data-l>
+      <a class="btn white" href="/serviced-accommodation-cardiff">For Corporates <span class="arr">→</span></a>
+      <a class="btn ghost light" href="/agents-landlords">For Landlords</a>
+    </div>
+  </div>
+  <a class="badge" href="#google-reviews" data-l aria-label={`Rated ${google.rating.toFixed(1)} on Google from ${google.count} reviews`}>
+    <svg viewBox="0 0 200 200" aria-hidden="true"><defs><path id="circ" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" /></defs><text><textPath href="#circ">PONTCANNA · CARDIFF BAY · CORPORATE HOUSING · </textPath></text></svg>
+    <span class="b-in"><strong>{google.rating.toFixed(1)}</strong><span class="st">★★★★★</span><span class="mono">Google</span></span>
+  </a>
+  <button class="replay mono" data-replay hidden>Replay intro ↺</button>
+</section>
+
+<style>
+  .hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; color: #fff; overflow: hidden; background: var(--ink); isolation: isolate; }
+  .photo { position: absolute; inset: 0; z-index: -2; transform-origin: 50% 50%; }
+  .photo :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(6,13,34,.82) 0%, rgba(6,13,34,.45) 45%, rgba(6,13,34,.05) 75%), linear-gradient(0deg, rgba(6,13,34,.6) 0%, transparent 40%), linear-gradient(180deg, rgba(6,13,34,.5) 0%, transparent 22%); }
+  .content { padding-block: 140px clamp(56px, 9vh, 110px); }
+  h1 { margin: 0 0 22px; max-width: 15ch; color: #fff; }
+  .l1 { display: block; font: 500 .76rem/1.2 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: #c9d3f7; margin-bottom: 18px; }
+  .l2 { display: block; }
+  .lede { color: #e1e6f5; max-width: 48ch; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+
+  .intro { position: absolute; inset: 0; z-index: var(--z-intro); pointer-events: none; display: grid; place-items: center; }
+  .hole { width: min(46vmin, 380px); aspect-ratio: 1; border-radius: 50%; box-shadow: 0 0 0 200vmax var(--ink); position: relative; will-change: transform; }
+  .disc { position: absolute; inset: -1px; border-radius: 50%; background: var(--blue); display: grid; place-items: center; }
+  .disc img { width: 64%; height: auto; }
+  html:not(.js) .intro, .reduced .intro, .intro.done { display: none; }
+
+  .badge { position: absolute; right: clamp(16px, 5vw, 64px); bottom: clamp(56px, 9vh, 110px); width: 156px; height: 156px; color: #fff; text-decoration: none; display: grid; place-items: center; }
+  .badge svg { position: absolute; inset: 0; width: 100%; height: 100%; animation: spin 26s linear infinite; }
+  .badge text { font: 500 12px var(--f-mono); letter-spacing: 2.1px; fill: #fff; }
+  .b-in { width: 96px; height: 96px; border-radius: 50%; background: var(--blue); display: grid; place-items: center; align-content: center; gap: 2px; box-shadow: 0 20px 40px -18px rgba(0,0,0,.6); transition: transform .4s var(--ease); }
+  .badge:hover .b-in { transform: scale(1.06); }
+  .b-in strong { font: 760 1.6rem/1 var(--f-display); }
+  .st { color: var(--star); font-size: .6rem; letter-spacing: 1px; }
+  .b-in .mono { font-size: .58rem; letter-spacing: .12em; text-transform: uppercase; color: #c9d3f7; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .replay { position: absolute; left: 50%; bottom: 18px; translate: -50% 0; background: none; border: 0; color: #c9d3f7; font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; opacity: .75; }
+  .replay:hover { opacity: 1; }
+  @media (max-width: 760px) {
+    .badge { width: 112px; height: 112px; top: 92px; right: 14px; bottom: auto; }
+    .badge text { font-size: 12px; letter-spacing: 2.1px; }
+    .b-in { width: 70px; height: 70px; }
+    .b-in strong { font-size: 1.2rem; }
+    .shade { background: linear-gradient(0deg, rgba(6,13,34,.9) 0%, rgba(6,13,34,.55) 50%, rgba(6,13,34,.25) 100%); }
+    .ctas .btn { flex: 1 1 200px; }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const intro = hero?.querySelector<HTMLElement>('[data-intro]');
+  const hole = hero?.querySelector<HTMLElement>('[data-hole]');
+  const disc = hero?.querySelector<HTMLElement>('[data-disc]');
+  const photo = hero?.querySelector<HTMLElement>('[data-photo]');
+  const replay = hero?.querySelector<HTMLButtonElement>('[data-replay]');
+  const lines = hero ? [...hero.querySelectorAll<HTMLElement>('[data-l]')] : [];
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function showContent(instant = false) {
+    gsap.to(lines, { opacity: 1, y: 0, duration: instant ? 0 : 0.7, ease: 'expo.out', stagger: instant ? 0 : 0.07 });
+  }
+  function play() {
+    if (!hero || !intro || !hole || !disc || !photo) return;
+    intro.classList.remove('done');
+    gsap.set(lines, { opacity: 0, y: 18 });
+    // one clean move: disc pops in → becomes a window onto the photo → flies past the camera (≈2.4s total)
+    const vmax = Math.max(innerWidth, innerHeight);
+    const end = (vmax * 1.6) / hole.offsetWidth;
+    const tl = gsap.timeline({ defaults: { ease: 'expo.inOut' }, onComplete: finish });
+    tl.set(hole, { scale: 0.001 }).set(disc, { opacity: 1 }).set(photo, { scale: 1.22 })
+      .to(hole, { scale: 1, duration: 0.6, ease: 'back.out(1.5)' })
+      .to(disc, { opacity: 0, duration: 0.4, ease: 'power2.inOut' }, '+=0.25')
+      .to(hole, { scale: end, duration: 1.1 }, '-=0.1')
+      .to(photo, { scale: 1, duration: 1.4, ease: 'expo.out' }, '<')
+      .add(() => showContent(), '-=0.55');
+    const skip = () => { tl.progress(1); };
+    ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach((ev) => addEventListener(ev, skip, { once: true, passive: true }));
+    function finish() {
+      intro!.classList.add('done');
+      ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach((ev) => removeEventListener(ev, skip));
+      if (replay) replay.hidden = false;
+    }
+  }
+  if (hero) {
+    let seen = false;
+    try { seen = sessionStorage.getItem('bp-intro') === '1'; sessionStorage.setItem('bp-intro', '1'); } catch {}
+    if (reduced || seen) { intro?.classList.add('done'); showContent(true); if (replay && !reduced) replay.hidden = false; }
+    else play();
+    replay?.addEventListener('click', () => { replay.hidden = true; scrollTo(0, 0); play(); });
+  }
+</script>

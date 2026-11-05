@@ -1,0 +1,104 @@
+---
+import { properties, contact } from '../data/site';
+interface Props { kind?: 'stay' | 'landlord'; property?: string; id?: string }
+const { kind = 'stay', property, id = 'enquiry' } = Astro.props;
+const key = import.meta.env.PUBLIC_WEB3FORMS_KEY || 'YOUR_WEB3FORMS_KEY';
+const stayNeeds = ['Parking', 'Pet-friendly', 'Multiple apartments for a team', 'Corporate invoicing / VAT', 'Dedicated workspace'];
+const services = ['Guaranteed rent', 'Serviced accommodation management (15%)', 'Not sure yet'];
+---
+<form class="ef" id={id} action="https://api.web3forms.com/submit" method="POST" data-ef data-kind={kind}>
+  <input type="hidden" name="access_key" value={key} />
+  <input type="hidden" name="subject" value={kind === 'stay' ? 'Booking enquiry — bluepalmproperty.co.uk' : 'Landlord enquiry — bluepalmproperty.co.uk'} />
+  <input type="hidden" name="from_name" value="bluepalmproperty.co.uk" />
+  <input type="checkbox" name="botcheck" class="sr" tabindex="-1" autocomplete="off" aria-hidden="true" />
+  {kind === 'stay' ? (
+    <>
+      <div class="r2">
+        <label class="f"><span>Name *</span><input name="name" required autocomplete="name" /></label>
+        <label class="f"><span>Company / production</span><input name="company" autocomplete="organization" /></label>
+        <label class="f"><span>Email *</span><input name="email" type="email" required autocomplete="email" /></label>
+        <label class="f"><span>Phone</span><input name="phone" type="tel" autocomplete="tel" /></label>
+        <label class="f"><span>Check-in *</span><input name="check_in" type="date" required /></label>
+        <label class="f"><span>Check-out *</span><input name="check_out" type="date" required /></label>
+        <label class="f"><span>Number of guests *</span><input name="guests" type="number" min="1" max="40" value="1" required /></label>
+        <label class="f"><span>Apartment</span>
+          <select name="apartment" data-prop>
+            <option value="">Any — match me to the right apartment</option>
+            {properties.map((p) => <option value={p.slug} selected={p.slug === property}>{p.name} — {p.spec}</option>)}
+          </select>
+        </label>
+      </div>
+      <fieldset class="ticks-f"><legend>Requirements</legend>
+        {stayNeeds.map((n) => <label><input type="checkbox" name="requirements[]" value={n} /><span>{n}</span></label>)}
+      </fieldset>
+      <label class="f"><span>Anything else?</span><textarea name="message" rows="4" placeholder="Tell us a little about your dates and what brings you to Cardiff."></textarea></label>
+    </>
+  ) : (
+    <>
+      <fieldset class="seg"><legend>I’m interested in</legend>
+        {services.map((s, i) => <label><input type="radio" name="service" value={s} checked={i === 0} data-svc={i === 1 ? 'management' : i === 0 ? 'rent' : undefined} /><span>{s}</span></label>)}
+      </fieldset>
+      <div class="r2">
+        <label class="f"><span>Full name *</span><input name="name" required autocomplete="name" /></label>
+        <label class="f"><span>Email address *</span><input name="email" type="email" required autocomplete="email" /></label>
+        <label class="f"><span>Phone number *</span><input name="phone" type="tel" required autocomplete="tel" /></label>
+        <label class="f"><span>Property postcode *</span><input name="postcode" required autocomplete="postal-code" /></label>
+        <label class="f"><span>Bedrooms</span><select name="bedrooms"><option value="">Choose…</option><option>1</option><option>2</option><option>3</option><option>4+</option></select></label>
+        <label class="f"><span>Current / expected monthly rent</span><input name="current_rent" inputmode="numeric" placeholder="£" /></label>
+      </div>
+      <label class="f"><span>Tell us about your property</span><textarea name="message" rows="4"></textarea></label>
+      <label class="consent"><input type="checkbox" name="consent" value="yes" required /><span>I agree to be contacted by Blue Palm Property regarding this enquiry.</span></label>
+    </>
+  )}
+  <div class="send">
+    <button class="btn" type="submit">{kind === 'stay' ? 'Send enquiry' : 'Book my free property assessment'} <span class="arr">→</span></button>
+    <span class="mono note">{contact.reply}</span>
+  </div>
+  <p class="msg" role="status" aria-live="polite"></p>
+</form>
+<style>
+  .ef { display: grid; gap: 16px; }
+  .r2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 16px; }
+  .f { display: grid; gap: 6px; font-size: .86rem; font-weight: 600; }
+  .f input, .f select, .f textarea { font: 400 1rem/1.4 var(--f-body); color: var(--text); padding: 13px 14px; border-radius: 12px; border: 1px solid var(--line); background: #fff; width: 100%; transition: border-color .2s, box-shadow .2s; }
+  .f input:focus, .f select:focus, .f textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 4px rgba(33,61,153,.14); }
+  fieldset { border: 0; margin: 0; padding: 0; }
+  legend { font-size: .86rem; font-weight: 600; margin-bottom: 8px; }
+  .ticks-f, .seg { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ticks-f legend, .seg legend { width: 100%; }
+  .ticks-f label, .seg label { cursor: pointer; }
+  .ticks-f input, .seg input { position: absolute; opacity: 0; pointer-events: none; }
+  .ticks-f span, .seg span { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: .92rem; font-weight: 500; transition: all .2s; }
+  .ticks-f input:checked + span, .seg input:checked + span { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .ticks-f input:focus-visible + span, .seg input:focus-visible + span { outline: 2px solid var(--blue-2); outline-offset: 2px; }
+  .consent { display: flex; gap: 10px; align-items: flex-start; font-size: .88rem; color: var(--muted); }
+  .consent input { margin-top: 4px; accent-color: var(--blue); }
+  .send { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .send .btn { border: 0; }
+  .note { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .msg { margin: 0; font-weight: 600; min-height: 1.2em; }
+  .msg.ok { color: #137a3d; } .msg.err { color: #b3261e; }
+  @media (max-width: 620px) { .r2 { grid-template-columns: minmax(0, 1fr); } .send .btn { width: 100%; } }
+</style>
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-ef]').forEach((form) => {
+    const q = new URLSearchParams(location.search);
+    const pk = q.get('package') || q.get('property');
+    const sel = form.querySelector<HTMLSelectElement>('[data-prop]');
+    if (pk && sel && [...sel.options].some((o) => o.value === pk)) sel.value = pk;
+    const svc = q.get('service');
+    if (svc) form.querySelectorAll<HTMLInputElement>('[data-svc]').forEach((r) => (r.checked = r.dataset.svc === svc));
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = form.querySelector<HTMLElement>('.msg'); const btn = form.querySelector<HTMLButtonElement>('button[type=submit]');
+      if (!msg || !btn) return;
+      btn.disabled = true; msg.className = 'msg'; msg.textContent = 'Sending…';
+      try {
+        const r = await fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) });
+        const j = await r.json(); if (!j.success) throw new Error(j.message);
+        form.reset(); msg.classList.add('ok'); msg.textContent = 'Thank you — your enquiry has been sent. We usually reply within one working day.';
+      } catch { msg.classList.add('err'); msg.textContent = 'Sorry, that didn’t send. Please email info@bluepalmproperty.co.uk.'; }
+      finally { btn.disabled = false; }
+    });
+  });
+</script>

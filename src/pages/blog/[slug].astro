@@ -1,0 +1,84 @@
+---
+import Base from '../../layouts/Base.astro';
+import Pic from '../../components/Pic.astro';
+import posts from '../../data/blog.json';
+import { SITE, img, brand } from '../../data/site';
+export function getStaticPaths() { return posts.map((p) => ({ params: { slug: p.slug }, props: { p } })); }
+const { p } = Astro.props as any;
+const date = new Date(p.date);
+const fmt = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const text = p.html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+const desc = (p.seoDesc || (p.excerpt.length > 90 ? p.excerpt : text.slice(0, 160).replace(/\s+\S*$/, '') + '…')).replace(/&amp;/g, '&');
+const isLandlord = p.tags.some((t: string) => /landlord|guaranteed|cashflow|rental/i.test(t));
+const crumbs = [{ name: 'Blog', path: '/blog' }, { name: p.title, path: `/blog/${p.slug}` }];
+const related = posts.filter((x: any) => x.slug !== p.slug).sort((a: any, b: any) => b.date - a.date).slice(0, 3);
+const ld = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, datePublished: date.toISOString(), dateModified: date.toISOString(), image: SITE + img(p.img), author: { '@type': 'Organization', name: 'Blue Palm' }, publisher: { '@id': SITE + '/#business' }, mainEntityOfPage: `${SITE}/blog/${p.slug}`, keywords: p.tags.join(', '), wordCount: p.words };
+---
+<Base title={`${p.title} — Blue Palm Corporate Housing Cardiff`} desc={desc} crumbs={crumbs} schema={[ld]} heroDark={false}>
+  <article class="post">
+    <header class="wrap ph-head">
+      <nav class="bc mono" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/blog">Blog</a></nav>
+      <p class="mono meta">{fmt} · {Math.max(2, Math.round(p.words / 220))} min read</p>
+      <h1>{p.title}</h1>
+      {p.excerpt && <p class="lede">{p.excerpt}</p>}
+    </header>
+    <div class="wrap cover ph"><Pic k={p.img} alt="" sizes="100vw" eager /></div>
+    <div class="wrap body-wrap">
+      <div class="prose" set:html={p.html} />
+      <aside class="cta card">
+        {isLandlord ? (
+          <>
+            <p class="kicker">For landlords</p>
+            <h2>Guaranteed rent in Cardiff</h2>
+            <p>Our property partners typically earn 20-35% more than standard AST rentals, with no void periods.</p>
+            <a class="btn" href="/agents-landlords#open-calculator">Compare your rental profits <span class="arr">→</span></a>
+          </>
+        ) : (
+          <>
+            <p class="kicker">Book your stay</p>
+            <h2>Corporate housing in Pontcanna & Cardiff Bay</h2>
+            <p>Fully serviced corporate apartments for professionals, relocations and production teams.</p>
+            <a class="btn" href="/contact">Book your stay <span class="arr">→</span></a>
+          </>
+        )}
+      </aside>
+    </div>
+    {p.tags.length > 0 && <div class="wrap tags">{p.tags.map((t: string) => <span class="mono">{t}</span>)}</div>}
+  </article>
+  <section class="sec white">
+    <div class="wrap">
+      <h2>More from the blog</h2>
+      <ul class="rel">{related.map((r: any) => <li><a href={`/blog/${r.slug}`}><div class="ph"><Pic k={r.img} alt="" sizes="(max-width: 700px) 100vw, 33vw" w={800} /></div><h3>{r.title}</h3></a></li>)}</ul>
+    </div>
+  </section>
+</Base>
+<style>
+  .post { padding: 120px 0 60px; }
+  .ph-head { max-width: 900px; }
+  .bc { font-size: .74rem; color: var(--muted); } .bc a { text-decoration: none; }
+  .meta { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--blue); margin: 18px 0 10px; }
+  h1 { font-size: var(--fs-display-2); }
+  .cover { aspect-ratio: 21 / 9; margin-block: 30px 50px; border-radius: var(--r); }
+  .body-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: clamp(30px, 5vw, 80px); align-items: start; }
+  .prose { max-width: 70ch; font-size: 1.08rem; }
+  .prose :global(h2) { font-size: var(--fs-display-3); margin-top: 1.4em; }
+  .prose :global(h3) { font-size: 1.5rem; margin-top: 1.3em; }
+  .prose :global(h4) { margin-top: 1.2em; }
+  .prose :global(p), .prose :global(li) { color: #2e3650; }
+  .prose :global(a) { color: var(--blue); }
+  .prose :global(ul), .prose :global(ol) { padding-left: 1.2em; }
+  .prose :global(li) { margin-bottom: .4em; }
+  .prose :global(blockquote) { margin: 1.5em 0; padding-left: 20px; border-left: 3px solid var(--blue); font: 500 1.25rem/1.45 var(--f-display); }
+  .prose :global(table) { width: 100%; border-collapse: collapse; margin: 1.5em 0; font-size: .95rem; display: block; overflow-x: auto; }
+  .prose :global(th), .prose :global(td) { border: 1px solid var(--line); padding: 10px; text-align: left; }
+  .cta { position: sticky; top: 110px; display: grid; gap: 12px; }
+  .cta h2 { font-size: 1.5rem; margin: 0; }
+  .cta p { color: var(--muted); margin: 0; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 40px; }
+  .tags span { font-size: .72rem; padding: 7px 12px; border-radius: 999px; background: var(--blue-soft); color: var(--blue); }
+  .rel { list-style: none; padding: 0; margin: 30px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+  .rel a { text-decoration: none; }
+  .rel .ph { aspect-ratio: 4/3; margin-bottom: 14px; }
+  .rel h3 { font-size: 1.3rem; }
+  @media (max-width: 960px) { .body-wrap { grid-template-columns: minmax(0, 1fr); } .cta { position: static; } .rel { grid-template-columns: minmax(0, 1fr); } .cover { aspect-ratio: 3/2; } .post { padding-top: 100px; } }
+</style>

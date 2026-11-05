@@ -1,0 +1,54 @@
+---
+import { google } from '../data/site';
+interface Props { tone?: 'light' | 'white' }
+const { tone = 'white' } = Astro.props;
+---
+<section class:list={['gr sec', tone]} id="google-reviews" aria-labelledby="gr-h">
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <p class="kicker" data-reveal>Google Reviews</p>
+        <h2 id="gr-h" data-reveal=".05">Rated {google.rating.toFixed(1)} on Google.</h2>
+      </div>
+      <a class="score" href={google.reviewsUrl} target="_blank" rel="noopener" data-reveal=".1" aria-label={`${google.name}: ${google.rating.toFixed(1)} out of 5 from ${google.count} Google reviews`}>
+        <svg viewBox="0 0 48 48" width="34" height="34" aria-hidden="true"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.8-2.1 5.1-4.4 6.7v5.5h7.1c4.2-3.8 6.6-9.5 6.6-16.2z"/><path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.3l-7.1-5.5c-2 1.3-4.5 2.1-7.4 2.1-5.7 0-10.6-3.8-12.3-9H4.4v5.7C8 41.1 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.7 28.3c-.4-1.3-.7-2.8-.7-4.3s.3-3 .7-4.3V14H4.4C2.9 17 2 20.4 2 24s.9 7 2.4 10z"/><path fill="#EA4335" d="M24 10.7c3.2 0 6.1 1.1 8.4 3.3l6.3-6.3C34.9 4.1 29.9 2 24 2 15.4 2 8 6.9 4.4 14l7.3 5.7c1.7-5.2 6.6-9 12.3-9z"/></svg>
+        <strong>{google.rating.toFixed(1)}</strong>
+        <span class="stars" aria-hidden="true">★★★★★</span>
+        <span class="n mono">{google.count} reviews</span>
+      </a>
+    </div>
+    <ul class="list">
+      {google.reviews.map((r, i) => (
+        <li class="card" data-reveal={String((i % 3) * 0.05)}>
+          <span class="stars" aria-label="5 out of 5 stars">★★★★★</span>
+          <blockquote>“{r.text}”</blockquote>
+          <p class="who"><span class="av" aria-hidden="true">{r.name[0]}</span>{r.name}<span class="mono src">via Google</span></p>
+        </li>
+      ))}
+    </ul>
+    <div class="cta" data-reveal>
+      <a class="btn" href={google.reviewsUrl} target="_blank" rel="noopener">Read all {google.count} reviews <span class="arr">↗</span></a>
+      <a class="btn ghost" href={google.writeUrl} target="_blank" rel="noopener">Stayed with us? Leave a review</a>
+    </div>
+  </div>
+</section>
+<style>
+  .gr.white { background: #fff; }
+  .gr.light { background: var(--paper); }
+  .top { display: flex; justify-content: space-between; align-items: end; gap: 30px; flex-wrap: wrap; margin-bottom: 44px; }
+  h2 { margin: 0; }
+  .score { display: grid; grid-template-columns: auto auto; grid-template-rows: auto auto; column-gap: 14px; align-items: center; text-decoration: none; padding: 18px 24px; border-radius: 18px; border: 1px solid var(--line); background: var(--paper); transition: transform .4s var(--ease); }
+  .score:hover { transform: translateY(-3px); }
+  .score svg { grid-row: span 2; }
+  .score strong { font: 760 2.4rem/1 var(--f-display); }
+  .score .n { grid-column: 2; font-size: .76rem; color: var(--muted); }
+  .score .stars { grid-column: 3; grid-row: 1; }
+  .stars { color: var(--star); letter-spacing: 3px; }
+  .list { list-style: none; padding: 0; margin: 0; columns: 3 300px; column-gap: 18px; }
+  .list li { break-inside: avoid; margin-bottom: 18px; display: grid; gap: 12px; }
+  blockquote { margin: 0; font: 500 1.12rem/1.45 var(--f-display); letter-spacing: -.005em; }
+  .who { display: flex; align-items: center; gap: 10px; margin: 0; font-weight: 600; }
+  .av { width: 34px; height: 34px; border-radius: 50%; background: var(--blue); color: #fff; display: grid; place-items: center; font: 700 .95rem/1 var(--f-display); }
+  .src { margin-left: auto; font-size: .7rem; color: var(--muted); font-weight: 400; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+</style>

@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Pic from '../components/Pic.astro';
+import posts from '../data/blog.json';
+import { blogPage, SITE } from '../data/site';
+const crumbs = [{ name: 'Blog', path: '/blog' }];
+const sorted = [...posts].sort((a, b) => b.date - a.date);
+const fmt = (d: number) => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const tagOf = (p: any) => (p.tags.some((t: string) => /landlord|guaranteed|cashflow|rent\b|rental/i.test(t)) ? 'Landlords' : 'Guests & companies');
+const ld = { '@context': 'https://schema.org', '@type': 'Blog', name: 'Blue Palm Blog', url: SITE + '/blog', blogPost: sorted.map((p) => ({ '@type': 'BlogPosting', headline: p.title, url: `${SITE}/blog/${p.slug}`, datePublished: new Date(p.date).toISOString() })) };
+const [lead, ...rest] = sorted;
+---
+<Base title={blogPage.title} desc={blogPage.desc} crumbs={crumbs} schema={[ld]}>
+  <PageHero kicker="Blog" h1="Cardiff Corporate Accommodation & Landlord Guides" lede={blogPage.desc} crumbs={crumbs} />
+  <section class="sec">
+    <div class="wrap">
+      <div class="filters" role="group" aria-label="Filter posts">
+        {['All', 'Guests & companies', 'Landlords'].map((t, i) => <button class:list={[{ on: i === 0 }]} data-t={t}>{t}</button>)}
+      </div>
+      <a class="lead" href={`/blog/${lead.slug}`} data-tag={tagOf(lead)}>
+        <div class="ph"><Pic k={lead.img} alt="" sizes="(max-width: 900px) 100vw, 60vw" eager /></div>
+        <div><p class="mono meta">{fmt(lead.date)} · {Math.max(2, Math.round(lead.words / 220))} min read</p><h2>{lead.title}</h2><p>{lead.excerpt}</p><span class="link">Read article →</span></div>
+      </a>
+      <ul class="grid">
+        {rest.map((p, i) => (
+          <li data-tag={tagOf(p)} data-reveal={String((i % 3) * 0.05)}>
+            <a href={`/blog/${p.slug}`}>
+              <div class="ph"><Pic k={p.img} alt="" sizes="(max-width: 700px) 100vw, 33vw" w={800} /></div>
+              <p class="mono meta">{fmt(p.date)} · {tagOf(p)}</p>
+              <h3>{p.title}</h3>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+<style>
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 34px; }
+  .filters button { font: 600 .92rem/1 var(--f-body); padding: 12px 18px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--text); cursor: pointer; }
+  .filters button.on { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .lead { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: center; text-decoration: none; margin-bottom: 60px; }
+  .lead .ph { aspect-ratio: 3/2; }
+  .lead h2 { font-size: var(--fs-display-3); }
+  .lead p { color: var(--muted); }
+  .meta { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--blue) !important; margin: 14px 0 8px; }
+  .grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 22px; }
+  .grid [hidden], .lead[hidden] { display: none; }
+  .grid a { text-decoration: none; display: block; }
+  .grid .ph { aspect-ratio: 4/3; }
+  .grid h3 { font-size: 1.35rem; }
+  .ph :global(img) { transition: transform .9s var(--ease); }
+  a:hover .ph :global(img) { transform: scale(1.05); }
+  @media (max-width: 900px) { .lead, .grid { grid-template-columns: minmax(0, 1fr); } }
+</style>
+<script>
+  const bs = document.querySelectorAll<HTMLButtonElement>('[data-t]');
+  bs.forEach((b) => b.addEventListener('click', () => {
+    bs.forEach((x) => x.classList.toggle('on', x === b));
+    document.querySelectorAll<HTMLElement>('[data-tag]').forEach((el) => { el.hidden = b.dataset.t !== 'All' && el.dataset.tag !== b.dataset.t; el.style.opacity = '1'; el.style.transform = 'none'; });
+  }));
+</script>

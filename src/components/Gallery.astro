@@ -1,0 +1,65 @@
+---
+import Pic from './Pic.astro';
+import { img, images } from '../data/site';
+interface Props { keys: string[]; name: string }
+const { keys, name } = Astro.props;
+---
+<div class="gal" data-gal>
+  {keys.map((k, i) => (
+    <button class:list={['g', `g${i}`]} data-i={i} aria-label={`Open photo ${i + 1} of ${keys.length}`}>
+      <Pic k={k} alt={`${name} — photo ${i + 1} of ${keys.length}`} eager={i < 3} sizes={i === 0 ? '(max-width: 800px) 100vw, 60vw' : '(max-width: 800px) 50vw, 25vw'} w={i === 0 ? 1600 : 800} />
+    </button>
+  ))}
+  <span class="count mono" aria-hidden="true">{keys.length} photos</span>
+</div>
+<dialog class="lb" data-lb aria-label={`${name} photos`}>
+  <figure><span data-lb-hold></span><figcaption class="mono" data-lb-cap></figcaption></figure>
+  <button class="x" data-lb-close aria-label="Close">✕</button>
+  <button class="nav prev" data-lb-prev aria-label="Previous photo">←</button>
+  <button class="nav next" data-lb-next aria-label="Next photo">→</button>
+  <script type="application/json" data-lb-data set:html={JSON.stringify(keys.map((k) => img(k, 1600)))} />
+</dialog>
+<style>
+  .gal { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 10px; height: min(70svh, 640px); }
+  .g { all: unset; cursor: zoom-in; overflow: hidden; border-radius: var(--r-s); background: var(--paper-2); position: relative; }
+  .g:focus-visible { outline: 3px solid var(--blue-2); outline-offset: 2px; }
+  .g :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--ease); }
+  .g:hover :global(img) { transform: scale(1.05); }
+  .g0 { grid-column: span 2; grid-row: span 2; }
+  .g:nth-child(n + 6) { display: none; }
+  .count { position: absolute; right: 14px; bottom: 14px; background: rgba(255,255,255,.94); color: var(--blue); padding: 8px 12px; border-radius: 999px; font-size: .74rem; pointer-events: none; }
+  .lb { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(6,13,34,.96); color: #fff; }
+  .lb[open] { display: grid; place-items: center; }
+  .lb::backdrop { background: rgba(6,13,34,.9); }
+  figure { margin: 0; display: grid; gap: 12px; justify-items: center; }
+  figure :global(img) { max-width: min(92vw, 1600px); max-height: 82dvh; object-fit: contain; border-radius: 10px; }
+  figcaption { font-size: .78rem; color: #c3cbe6; }
+  .x, .nav { position: fixed; background: rgba(255,255,255,.1); color: #fff; border: 1px solid rgba(255,255,255,.25); width: 52px; height: 52px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
+  .x { top: 18px; right: 18px; }
+  .prev { left: 18px; top: 50%; } .next { right: 18px; top: 50%; }
+  @media (max-width: 760px) {
+    .gal { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: 2fr 1fr; height: 62svh; }
+    .g0 { grid-column: span 2; grid-row: span 1; }
+    .g:nth-child(n + 4) { display: none; }
+    .nav { top: auto; bottom: 18px; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-gal]').forEach((gal) => {
+    const lb = gal.nextElementSibling as HTMLDialogElement | null;
+    if (!lb) return;
+    const srcs: string[] = JSON.parse(lb.querySelector('[data-lb-data]')?.textContent || '[]');
+    let im: HTMLImageElement | null = null; const cap = lb.querySelector<HTMLElement>('[data-lb-cap]')!;
+    let i = 0;
+    const show = (n: number) => { if (!im) { im = document.createElement('img'); lb.querySelector('[data-lb-hold]')?.replaceWith(im); } i = (n + srcs.length) % srcs.length; im.src = srcs[i]; im.alt = `Photo ${i + 1} of ${srcs.length}`; cap.textContent = `Photo ${i + 1} of ${srcs.length}`; };
+    gal.querySelectorAll<HTMLButtonElement>('[data-i]').forEach((b) => b.addEventListener('click', () => { show(+b.dataset.i!); lb.showModal(); (window as any).__lenis?.stop(); }));
+    lb.addEventListener('close', () => (window as any).__lenis?.start());
+    lb.querySelector('[data-lb-close]')?.addEventListener('click', () => lb.close());
+    lb.querySelector('[data-lb-prev]')?.addEventListener('click', () => show(i - 1));
+    lb.querySelector('[data-lb-next]')?.addEventListener('click', () => show(i + 1));
+    lb.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') show(i - 1); if (e.key === 'ArrowRight') show(i + 1); });
+    lb.addEventListener('click', (e) => { if (e.target === lb) lb.close(); });
+    let sx = 0; lb.addEventListener('touchstart', (e) => (sx = e.touches[0].clientX), { passive: true });
+    lb.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1)); });
+  });
+</script>

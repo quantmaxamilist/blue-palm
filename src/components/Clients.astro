@@ -1,0 +1,30 @@
+---
+import { clients, clientLogo, home } from '../data/site';
+interface Props { tone?: 'dark' | 'light' }
+const { tone = 'dark' } = Astro.props;
+---
+<section class:list={['cl', tone]} aria-label={home.trusted}>
+  <div class="wrap head"><p class="mono">{home.trusted}</p></div>
+  <div class="track-wrap">
+    <div class="track">
+      {[0, 1].map((k) => (
+        <ul aria-hidden={k === 1 ? 'true' : undefined}>
+          {clients.map((c) => <li><img src={clientLogo(c)} alt={k === 0 ? c : ''} loading="lazy" height="44" /></li>)}
+        </ul>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .cl { padding: 40px 0 44px; overflow: hidden; }
+  .cl.dark { background: var(--night); }
+  .cl.light { background: var(--paper); border-block: 1px solid var(--line); }
+  .head p { font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: #8790aa; margin: 0 0 24px; }
+  .track-wrap { mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .track { display: flex; width: max-content; animation: marq 42s linear infinite; }
+  .track:hover { animation-play-state: paused; }
+  ul { display: flex; align-items: center; gap: clamp(40px, 6vw, 88px); list-style: none; margin: 0; padding: 0 clamp(20px, 3vw, 44px); }
+  img { height: 40px; width: auto; max-width: 150px; object-fit: contain; opacity: .85; }
+  .light img { filter: brightness(0); opacity: .7; }
+  @keyframes marq { to { transform: translateX(-50%); } }
+</style>

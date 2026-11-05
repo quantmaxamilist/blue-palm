@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import GoogleReviews from '../components/GoogleReviews.astro';
+import { contactPage as c, contact, home, google, social } from '../data/site';
+const crumbs = [{ name: 'Book your stay', path: '/contact' }];
+---
+<Base title={c.title} desc={c.desc} crumbs={crumbs} heroDark={false} band={false}>
+  <section class="ct">
+    <div class="wrap ct-in">
+      <aside>
+        <nav class="bc mono" aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">Contact</span></nav>
+        <p class="kicker">{c.h}</p>
+        <h1>Book your stay.</h1>
+        <p class="lede">{c.p}</p>
+        <a class="mail" href={`mailto:${contact.email}`}>{contact.email}</a>
+        <p class="mono reply">{contact.reply}</p>
+        <p class="note">{home.contactNote}</p>
+        <div class="alt">
+          <p><strong>Landlord or investor?</strong> <a class="link" href="/contact-1">Book a free property assessment →</a></p>
+          <p><a class="link" href={google.url} target="_blank" rel="noopener">★ {google.rating.toFixed(1)} on Google · {google.count} reviews</a></p>
+          <p class="soc"><a href={social.facebook} target="_blank" rel="noopener">Facebook</a> · <a href={social.linkedin} target="_blank" rel="noopener">LinkedIn</a></p>
+        </div>
+      </aside>
+      <div class="card"><h2 class="fh">Enquiry</h2><EnquiryForm /></div>
+    </div>
+  </section>
+  <GoogleReviews />
+</Base>
+<style>
+  .ct { padding: 130px 0 90px; }
+  .ct-in { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(30px, 6vw, 90px); align-items: start; }
+  aside { position: sticky; top: 110px; }
+  .bc { font-size: .74rem; color: var(--muted); margin-bottom: 24px; } .bc a { text-decoration: none; }
+  h1 { font-size: var(--fs-display-2); }
+  .mail { display: inline-block; font: 700 clamp(1.2rem, 2vw, 1.7rem)/1.2 var(--f-display); color: var(--blue); text-decoration: none; word-break: break-all; margin-top: 8px; }
+  .mail:hover { text-decoration: underline; }
+  .reply { font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .note { color: var(--muted); font-size: .95rem; }
+  .alt { border-top: 1px solid var(--line); padding-top: 18px; margin-top: 18px; }
+  .alt p { margin: 0 0 10px; }
+  .soc a { color: var(--muted); }
+  .fh { font-size: 1.6rem; }
+  @media (max-width: 900px) { .ct-in { grid-template-columns: minmax(0, 1fr); } aside { position: static; } .ct { padding-top: 104px; } }
+</style>

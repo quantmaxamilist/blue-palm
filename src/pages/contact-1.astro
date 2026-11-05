@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import { contactPage as c, contact, landlords } from '../data/site';
+const crumbs = [{ name: 'Free property assessment', path: '/contact-1' }];
+---
+<Base title={c.title} desc="Free property assessment for landlords in Cardiff and South Wales. Blue Palm will visit your property, assess its potential and give you a guaranteed rent offer — no obligation." crumbs={crumbs} heroDark={false} band={false}>
+  <section class="ct">
+    <div class="wrap ct-in">
+      <aside>
+        <nav class="bc mono" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/agents-landlords">Landlords</a> / <span aria-current="page">Assessment</span></nav>
+        <p class="kicker">Free — No Obligation</p>
+        <h1>{c.landlordH}</h1>
+        <p class="lede">{c.landlord}</p>
+        <ul class="ticks">{landlords.steps.map((s) => <li><span><strong>{s.t}.</strong> {s.d}</span></li>)}</ul>
+        <p class="mono serve">{landlords.serving} · {contact.reply}</p>
+        <a class="mail" href={`mailto:${contact.email}`}>{contact.email}</a>
+      </aside>
+      <div class="card"><h2 class="fh">Get Your Personalised Property Report</h2><EnquiryForm kind="landlord" /></div>
+    </div>
+  </section>
+</Base>
+<style>
+  .ct { padding: 130px 0 90px; }
+  .ct-in { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(30px, 6vw, 90px); align-items: start; }
+  aside { position: sticky; top: 110px; }
+  .bc { font-size: .74rem; color: var(--muted); margin-bottom: 24px; } .bc a { text-decoration: none; }
+  h1 { font-size: var(--fs-display-2); }
+  .ticks { margin: 24px 0; font-size: .95rem; color: var(--muted); }
+  .serve { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--blue); }
+  .mail { font: 700 1.3rem/1.2 var(--f-display); color: var(--blue); text-decoration: none; }
+  .fh { font-size: 1.6rem; }
+  @media (max-width: 900px) { .ct-in { grid-template-columns: minmax(0, 1fr); } aside { position: static; } .ct { padding-top: 104px; } }
+</style>

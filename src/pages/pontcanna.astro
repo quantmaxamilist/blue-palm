@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import PropertyCard from '../components/PropertyCard.astro';
+import { pontcanna as pc, home, properties, SITE } from '../data/site';
+const crumbs = [{ name: 'Pontcanna', path: '/pontcanna' }];
+const place = { '@context': 'https://schema.org', '@type': 'Place', name: 'Pontcanna, Cardiff', geo: { '@type': 'GeoCoordinates', latitude: 51.488, longitude: -3.199 }, containedInPlace: { '@type': 'City', name: 'Cardiff' }, url: SITE + '/pontcanna' };
+const icons = ['🍽', '🥐', '☕', '🧺', '🍺', '🌳'];
+---
+<Base title={pc.title} desc={pc.desc} crumbs={crumbs} schema={[place]}>
+  <PageHero kicker="Pontcanna, Cardiff" h1={pc.h1} lede={pc.lede} crumbs={crumbs} photo="misc-7" photoAlt="Victorian terraces on a leafy Pontcanna street, Cardiff">
+    <a class="btn white" href="/contact">Message us <span class="arr">→</span></a>
+  </PageHero>
+  <section class="sec">
+    <div class="wrap">
+      <p class="statement intro" data-reveal>{home.designed}</p>
+      <div class="items">{pc.items.map((x, i) => <article data-reveal={String((i % 3) * 0.05)}><span class="ic" aria-hidden="true">{icons[i]}</span><h2 class="h">{x.t}</h2><p>{x.d}</p></article>)}</div>
+    </div>
+  </section>
+  <section class="sec white">
+    <div class="wrap">
+      <h2>Our Pontcanna apartments</h2>
+      <div class="grid3">{properties.filter((p) => p.area === 'Pontcanna').map((p, i) => <PropertyCard p={p} i={i} />)}</div>
+    </div>
+  </section>
+</Base>
+<style>
+  .intro { max-width: 46ch; margin-bottom: 60px; }
+  .items { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 28px; }
+  .items article { border-top: 2px solid var(--blue); padding-top: 22px; }
+  .ic { font-size: 1.6rem; }
+  .h { font-size: 1.7rem; margin: 10px 0 8px; }
+  .items p { color: var(--muted); }
+  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 22px; margin-top: 30px; }
+  @media (max-width: 900px) { .items, .grid3 { grid-template-columns: minmax(0, 1fr); } }
+</style>

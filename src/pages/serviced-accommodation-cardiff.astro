@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Clients from '../components/Clients.astro';
+import Pic from '../components/Pic.astro';
+import PropertyCard from '../components/PropertyCard.astro';
+import Faq from '../components/Faq.astro';
+import GoogleReviews from '../components/GoogleReviews.astro';
+import { corporate as c, properties, SITE } from '../data/site';
+const crumbs = [{ name: 'Corporate', path: '/serviced-accommodation-cardiff' }];
+const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: c.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
+const svc = { '@context': 'https://schema.org', '@type': 'Service', name: 'Corporate accommodation & serviced apartments in Cardiff', serviceType: 'Corporate housing', provider: { '@id': SITE + '/#business' }, areaServed: { '@type': 'City', name: 'Cardiff' }, audience: c.who.map((w) => ({ '@type': 'Audience', audienceType: w.t })) };
+---
+<Base title={c.title} desc={c.desc} crumbs={crumbs} schema={[faqLd, svc]}>
+  <PageHero kicker="For companies, productions & contractors" h1={c.h1} sub={c.h1sub} lede={c.intro[0]} crumbs={crumbs} photo="hamilton-top-floor-2" photoAlt="Open-plan living room with yellow sofa in a Blue Palm apartment, Pontcanna">
+    <a class="btn white" href="/contact">Let's connect <span class="arr">→</span></a>
+    <a class="btn ghost light" href="/properties">Browse our current apartments</a>
+  </PageHero>
+  <Clients />
+  <section class="sec">
+    <div class="wrap split">
+      <div><p class="kicker" data-reveal>{c.whyH}</p><p class="statement" data-reveal=".05">{c.intro[1]}</p></div>
+      <ul class="why">{c.why.map((w, i) => <li data-reveal={String(i * 0.05)}><span class="n mono">0{i + 1}</span><h3>{w.t}</h3><p>{w.d}</p></li>)}</ul>
+    </div>
+  </section>
+  <section class="sec dark who">
+    <div class="wrap">
+      <p class="kicker" data-reveal>Who we house</p><h2 data-reveal=".05">{c.whoH}</h2>
+      <div class="who-grid">
+        {c.who.map((w, i) => (
+          <article class="w" data-reveal={String(i * 0.07)}>
+            <div class="ph"><Pic k={['misc-8', 'penhill-rd-2', 'wyndham-crescent-1-1'][i]} alt={w.t} sizes="(max-width: 900px) 100vw, 33vw" w={800} /></div>
+            <h3>{w.t}</h3><p>{w.d}</p>
+          </article>
+        ))}
+      </div>
+      <a class="btn white" href="/contact" data-reveal>Contact Our Team Today <span class="arr">→</span></a>
+    </div>
+  </section>
+  <section class="sec white">
+    <div class="wrap">
+      <div class="bh"><div><p class="kicker" data-reveal>For business</p><h2 data-reveal=".05">{c.bizH}</h2></div><p class="lede" data-reveal=".1">{c.biz}</p></div>
+      <div class="biz">{c.bizItems.map((b, i) => <div class="card" data-reveal={String((i % 3) * 0.05)}><h3>{b.t}</h3><p>{b.d}</p></div>)}</div>
+      <a class="btn" href="/contact" data-reveal>Work With Us <span class="arr">→</span></a>
+    </div>
+  </section>
+  <section class="sec incl">
+    <div class="wrap split">
+      <div class="ph tall" data-reveal><Pic k="penhill-rd-3" alt="Living room with fireplace in a Blue Palm Penhill Road apartment" sizes="(max-width: 880px) 100vw, 45vw" /></div>
+      <div>
+        <p class="kicker" data-reveal>Move-in ready</p><h2 data-reveal=".05">{c.includedH}</h2><p class="lede" data-reveal=".1">{c.included}</p>
+        <ul class="ticks" data-reveal=".12">{c.includedList.map((l) => <li><span>{l}</span></li>)}</ul>
+      </div>
+    </div>
+  </section>
+  <section class="sec white">
+    <div class="wrap">
+      <div class="bh"><h2>Browse our current apartments</h2><a class="link" href="/properties">All properties →</a></div>
+      <div class="grid3">{properties.slice(0, 3).map((p, i) => <PropertyCard p={p} i={i} />)}</div>
+    </div>
+  </section>
+  <Faq items={c.faq} />
+  <GoogleReviews tone="light" />
+</Base>
+<style>
+  .why { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; }
+  .why li { border-top: 1px solid var(--line); padding: 24px 0; display: grid; grid-template-columns: 52px minmax(0, 1fr); column-gap: 14px; }
+  .why li:last-child { border-bottom: 1px solid var(--line); }
+  .why .n { grid-row: span 2; color: var(--blue); font-size: .8rem; padding-top: 6px; }
+  .why h3 { font-size: 1.5rem; margin-bottom: 6px; }
+  .why p { color: var(--muted); margin: 0; }
+  .who h2 { color: #fff; }
+  .who-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin: 36px 0 40px; }
+  .w .ph { aspect-ratio: 4/3; margin-bottom: 18px; }
+  .w h3 { color: #fff; font-size: 1.5rem; }
+  .bh { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 36px; }
+  .bh h2 { margin: 0; }
+  .biz { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 36px; }
+  .biz h3 { font-size: 1.45rem; }
+  .biz p { color: var(--muted); margin: 0; }
+  .tall { aspect-ratio: 4/5; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+  @media (max-width: 900px) { .who-grid, .biz, .grid3 { grid-template-columns: minmax(0, 1fr); } }
+</style>

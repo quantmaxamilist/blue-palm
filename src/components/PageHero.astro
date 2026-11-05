@@ -1,0 +1,34 @@
+---
+import Pic from './Pic.astro';
+interface Props { kicker?: string; h1: string; sub?: string; lede?: string; crumbs?: { name: string; path: string }[]; photo?: string; photoAlt?: string }
+const { kicker, h1, sub, lede, crumbs = [], photo, photoAlt = '' } = Astro.props;
+---
+<section class:list={['ph-hero', { 'has-photo': !!photo }]}>
+  {photo && <div class="bg"><Pic k={photo} alt={photoAlt} eager sizes="100vw" /></div>}
+  <div class="wrap in">
+    {crumbs.length > 0 && (
+      <nav class="bc mono" aria-label="Breadcrumb"><a href="/">Home</a>{crumbs.map((c, i) => <><span aria-hidden="true">/</span>{i === crumbs.length - 1 ? <span aria-current="page">{c.name}</span> : <a href={c.path}>{c.name}</a>}</>)}</nav>
+    )}
+    {kicker && <p class="kicker light" data-reveal>{kicker}</p>}
+    <h1 data-reveal=".05">{h1}{sub && <span class="sub">{sub}</span>}</h1>
+    {lede && <p class="lede" data-reveal=".1">{lede}</p>}
+    <div class="slot" data-reveal=".15"><slot /></div>
+  </div>
+</section>
+<style>
+  .ph-hero { position: relative; background: var(--ink); color: #fff; padding: clamp(150px, 17vw, 220px) 0 clamp(64px, 8vw, 110px); overflow: hidden; isolation: isolate; }
+  .ph-hero.has-photo { min-height: min(86svh, 820px); display: flex; align-items: flex-end; }
+  .bg { position: absolute; inset: 0; z-index: -1; }
+  .bg :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(6,13,34,.86) 0%, rgba(6,13,34,.6) 45%, rgba(6,13,34,.12) 80%), linear-gradient(180deg, rgba(6,13,34,.55) 0%, transparent 30%, rgba(6,13,34,.6) 100%); }
+  @media (max-width: 760px) { .bg::after { background: linear-gradient(180deg, rgba(6,13,34,.6) 0%, rgba(6,13,34,.55) 40%, rgba(6,13,34,.9) 100%); } }
+  .ph-hero:not(.has-photo)::before { content: ''; position: absolute; right: -12vw; top: -20vw; width: 62vw; aspect-ratio: 1; border-radius: 50%; background: var(--blue); opacity: .55; z-index: -1; }
+  .in { position: relative; width: min(100% - 2 * var(--gut), var(--wrap)); }
+  h1 { color: #fff; max-width: 19ch; font-size: clamp(2rem, 3.8vw, 4.6rem); }
+  .sub { display: block; font-size: .5em; font-weight: 520; line-height: 1.15; margin-top: .4em; color: #c9d3f7; letter-spacing: -.01em; }
+  .lede { color: #d7ddf0; }
+  .bc { display: flex; flex-wrap: wrap; gap: 8px; font-size: .74rem; color: #aab3cd; margin-bottom: 26px; }
+  .bc a { color: #dfe5fb; text-decoration: none; } .bc a:hover { text-decoration: underline; }
+  .slot { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .slot:empty { display: none; }
+</style>

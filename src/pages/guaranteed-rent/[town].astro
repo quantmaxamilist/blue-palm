@@ -1,0 +1,76 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Faq from '../../components/Faq.astro';
+import EnquiryForm from '../../components/EnquiryForm.astro';
+import { landlordAreas, landlords as l, management, miles, SITE } from '../../data/site';
+export function getStaticPaths() { return landlordAreas.map((a) => ({ params: { town: a.slug }, props: { a } })); }
+const { a } = Astro.props;
+const Name = a.name.replace(/^the /, 'The ');
+const crumbs = [{ name: 'Guaranteed rent', path: '/guaranteed-rent' }, { name: Name, path: `/guaranteed-rent/${a.slug}` }];
+const title = `Guaranteed Rent ${Name} | Landlord Partnerships – Blue Palm`;
+const desc = `Guaranteed rent for landlords in ${a.name}. Blue Palm pays your agreed rent every month whether your property is occupied or not — no voids, no management fees. Free property assessment.`;
+const faq = [
+  { q: `Do you offer guaranteed rent in ${a.name}?`, a: `Blue Palm works with residential properties across South Wales, including ${a.name}. The most suitable properties are typically 2+ bedroom houses or properties in high-demand rental areas — contact us for a free assessment of your specific property.` },
+  ...l.faq,
+];
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'Service', name: `Guaranteed rent for landlords in ${Name}`, serviceType: 'Guaranteed rent', provider: { '@id': SITE + '/#business' }, areaServed: { '@type': 'Place', name: Name, geo: { '@type': 'GeoCoordinates', latitude: a.lat, longitude: a.lng } } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+const others = landlordAreas.filter((x) => x.slug !== a.slug).sort((x, y) => miles(a, x) - miles(a, y));
+---
+<Base title={title} desc={desc} crumbs={crumbs} schema={ld}>
+  <PageHero kicker={`${l.serving}`} h1={`Guaranteed Rent for Landlords in ${Name}`} lede={l.sub} crumbs={crumbs} photo="hamilton-top-floor-3" photoAlt="Dining area in a Blue Palm managed apartment">
+    <a class="btn white" href="#assess">Free Property Assessment <span class="arr">→</span></a>
+    <a class="btn ghost light" href="/agents-landlords#open-calculator">Compare your rental profits →</a>
+  </PageHero>
+  <section class="sec">
+    <div class="wrap split">
+      <div><p class="statement" data-reveal>{l.note}</p></div>
+      <div>{l.reliable.map((p) => <p data-reveal>{p}</p>)}<p data-reveal>{l.intro}</p></div>
+    </div>
+  </section>
+  <section class="sec blue">
+    <div class="wrap"><ul class="stats">{l.stats.map((s, i) => <li data-reveal={String(i * 0.05)}><strong>{s.n}</strong><span>{s.d}</span></li>)}</ul></div>
+  </section>
+  <section class="sec white">
+    <div class="wrap">
+      <p class="kicker">{l.stepsKicker}</p><h2>{l.stepsH}</h2>
+      <ol class="steps">{l.steps.map((s, i) => <li data-reveal={String(i * 0.05)}><span class="n">{i + 1}</span><h3>{s.t}</h3><p>{s.d}</p></li>)}</ol>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="wrap split">
+      <div><h2>{l.advH}</h2><p class="lede">Prefer to keep the income yourself? Our serviced accommodation management runs your property for a 15% fee.</p><a class="link" href="/management">{management.h1} →</a></div>
+      <ul class="ticks">{l.adv.map((x) => <li><span><strong>{x.t}.</strong> {x.d}</span></li>)}</ul>
+    </div>
+  </section>
+  <Faq items={faq} title="Common Questions" tone="white" />
+  <section class="sec" id="assess">
+    <div class="wrap split">
+      <div><p class="kicker">{l.ctaKicker}</p><h2>{l.ctaH}</h2><p class="lede">{l.cta}</p>
+        <p class="mono near">Also serving</p>
+        <ul class="chips">{others.map((o) => <li><a href={`/guaranteed-rent/${o.slug}`}>{o.name.replace(/^the /, 'The ')}</a></li>)}</ul>
+      </div>
+      <div class="card"><EnquiryForm kind="landlord" /></div>
+    </div>
+  </section>
+</Base>
+<style>
+  .statement { color: var(--blue); }
+  .stats { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; }
+  .stats li { display: grid; gap: 8px; border-top: 1px solid rgba(255,255,255,.3); padding-top: 18px; }
+  .stats strong { font: 780 clamp(2rem, 3.4vw, 3rem)/1 var(--f-display); color: #fff; }
+  .stats span { color: #dfe5fb; font-size: .92rem; }
+  .steps { list-style: none; padding: 0; margin: 30px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+  .steps li { border-top: 1px solid var(--line); padding-top: 20px; }
+  .steps .n { display: block; font: 760 var(--fs-display-2)/1 var(--f-display); color: var(--blue); margin-bottom: 10px; }
+  .steps h3 { font-size: 1.3rem; } .steps p { color: var(--muted); }
+  .near { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 26px; }
+  .chips { list-style: none; padding: 0; margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips a { display: inline-block; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: #fff; text-decoration: none; font-size: .9rem; }
+  .chips a:hover { background: var(--blue); color: #fff; }
+  @media (max-width: 900px) { .stats, .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .stats, .steps { grid-template-columns: minmax(0, 1fr); } }
+</style>

@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Pic from '../components/Pic.astro';
+import Clients from '../components/Clients.astro';
+import GoogleReviews from '../components/GoogleReviews.astro';
+import { about as a, home, landlords } from '../data/site';
+const crumbs = [{ name: 'About', path: '/aboutus' }];
+---
+<Base title={a.title} desc={a.desc} crumbs={crumbs}>
+  <PageHero kicker="Since 2019 · Pontcanna, Cardiff" h1={a.h1} lede={a.p[0]} crumbs={crumbs} />
+  <section class="sec">
+    <div class="wrap split">
+      <div class="pics">
+        <div class="ph p1" data-reveal><Pic k="misc-7" alt="Pontcanna street, Cardiff" sizes="(max-width: 880px) 100vw, 40vw" w={800} /></div>
+        <div class="ph p2" data-reveal=".08"><Pic k="fairleigh-road-2-1" alt="Living room in a Blue Palm Fairleigh Road apartment" sizes="(max-width: 880px) 60vw, 25vw" w={800} /></div>
+      </div>
+      <div>
+        <p class="statement" data-reveal>{a.p[1]}</p>
+        <p data-reveal=".05">{home.why}</p>
+        <h2 class="h3" data-reveal>For landlords and investors</h2>
+        <p data-reveal>{a.p[2]}</p>
+        <p data-reveal>{a.p[3]}</p>
+        <div class="ctas" data-reveal>
+          <a class="btn" href="/agents-landlords#open-calculator">Free property income calculator <span class="arr">→</span></a>
+          <a class="link" href="/agents-landlords">Find out more about our Landlord Partnership →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="sec blue">
+    <div class="wrap">
+      <ul class="stats">{landlords.stats.map((s, i) => <li data-reveal={String(i * 0.06)}><strong>{s.n}</strong><span>{s.d}</span></li>)}</ul>
+    </div>
+  </section>
+  <Clients tone="light" />
+  <GoogleReviews />
+</Base>
+<style>
+  .pics { position: relative; aspect-ratio: 1 / 1.1; }
+  .pics .ph { position: absolute; }
+  .p1 { inset: 0 18% 18% 0; border-radius: 999px 999px var(--r) var(--r); }
+  .p2 { right: 0; bottom: 0; width: 52%; aspect-ratio: 1; border-radius: 50%; border: 6px solid var(--paper); }
+  .statement { color: var(--blue); }
+  .h3 { font-size: var(--fs-display-3); margin-top: 1.2em; }
+  .ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 24px; }
+  .stats { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; }
+  .stats li { display: grid; gap: 8px; border-top: 1px solid rgba(255,255,255,.3); padding-top: 18px; }
+  .stats strong { font: 780 clamp(2rem, 3.4vw, 3.2rem)/1 var(--f-display); color: #fff; }
+  .stats span { color: #dfe5fb; font-size: .92rem; }
+  @media (max-width: 900px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>

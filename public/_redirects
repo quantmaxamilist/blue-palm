@@ -1,0 +1,12 @@
+/homepage-1 / 301
+/landlord /agents-landlords 301
+/cart / 301
+/blog/tag/* /blog 301
+/blog/category/* /blog 301
+/see-all-amenities-1 /hamilton-top-floor 301
+/see-all-amenities-2 /fairleigh-road-2 301
+/see-all-amenities-3 /hamilton-ground-floor 301
+/see-all-amenities-4 /wyndham-crescent 301
+/see-all-amenities-5 /penhill-rd 301
+/home / 301
+/book-your-stay /contact 301

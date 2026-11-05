@@ -1,0 +1,128 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Clients from '../components/Clients.astro';
+import Calculator from '../components/Calculator.astro';
+import Pic from '../components/Pic.astro';
+import Faq from '../components/Faq.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import { landlords as l, landlordAreas, SITE } from '../data/site';
+const crumbs = [{ name: 'Landlords', path: '/agents-landlords' }];
+const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: l.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
+const svc = { '@context': 'https://schema.org', '@type': 'Service', name: 'Guaranteed rent for landlords in Cardiff', serviceType: 'Guaranteed rent / rent-to-rent', provider: { '@id': SITE + '/#business' }, areaServed: [{ '@type': 'City', name: 'Cardiff' }, { '@type': 'AdministrativeArea', name: 'South Wales' }] };
+const howLd = { '@context': 'https://schema.org', '@type': 'HowTo', name: l.stepsH, step: l.steps.map((s, i) => ({ '@type': 'HowToStep', position: i + 1, name: s.t, text: s.d })) };
+---
+<Base title={l.title} desc={l.desc} crumbs={crumbs} schema={[faqLd, svc, howLd]}>
+  <PageHero kicker={l.kicker} h1={l.h1} lede={l.sub} crumbs={crumbs} photo="hamilton-ground-floor-2" photoAlt="Dining and living space in a Blue Palm apartment on Hamilton Street">
+    <a class="btn white" href="/contact-1">Free Property Assessment <span class="arr">→</span></a>
+    <a class="btn ghost light" href="#open-calculator">Compare your rental profits →</a>
+  </PageHero>
+  <section class="sec">
+    <div class="wrap split">
+      <div><p class="statement" data-reveal>{l.note}</p></div>
+      <div><p data-reveal=".05">{l.intro}</p><p class="mono small" data-reveal=".1">{l.small}</p></div>
+    </div>
+  </section>
+  <Calculator />
+  <section class="sec white vs">
+    <div class="wrap">
+      <div class="vs-grid">
+        <div class="card" data-reveal><h3>Traditional Buy-to-Let</h3><ul class="ticks crosses">{l.trad.map((t) => <li><span>{t}</span></li>)}</ul></div>
+        <div class="card bpc" data-reveal=".06"><h3>Blue Palm Partnership</h3><ul class="ticks">{l.bp.map((t) => <li><span>{t}</span></li>)}</ul></div>
+        <div class="card" data-reveal=".12"><h3>What Landlords Forget to Factor In</h3><ul class="ticks crosses">{l.forget.map((t) => <li><span>{t}</span></li>)}</ul></div>
+      </div>
+    </div>
+  </section>
+  <section class="sec reliable">
+    <div class="wrap split">
+      <div class="stick">
+        <p class="kicker" data-reveal>Guaranteed rent</p>
+        <h2 data-reveal=".05">{l.reliableH}</h2>
+        {l.reliable.map((p) => <p class="lede" data-reveal=".1">{p}</p>)}
+        <div class="ph r-img" data-reveal=".15"><Pic k="penhill-rd-9" alt="Bright living room in a Blue Palm managed property" sizes="(max-width: 880px) 100vw, 45vw" w={800} /></div>
+      </div>
+      <ol class="rl">{l.reliableList.map((r, i) => <li data-reveal><span class="n mono">{String(i + 1).padStart(2, '0')}</span><h3>{r.t}</h3><p>{r.d}</p></li>)}</ol>
+    </div>
+  </section>
+  <section class="sec blue">
+    <div class="wrap">
+      <p class="kicker light" data-reveal>{l.trustedH}</p>
+      <h2 class="t-h" data-reveal=".05">{l.trusted[0]}</h2>
+      <p class="lede" data-reveal=".1">{l.trusted[1]} {l.trusted[2]}</p>
+      <ul class="stats">{l.stats.map((s, i) => <li data-reveal={String(i * 0.06)}><strong>{s.n}</strong><span>{s.d}</span></li>)}</ul>
+    </div>
+  </section>
+  <Clients tone="light" />
+  <section class="sec white">
+    <div class="wrap">
+      <p class="kicker" data-reveal>{l.advKicker}</p><h2 data-reveal=".05">{l.advH}</h2>
+      <div class="adv">{l.adv.map((a, i) => <div data-reveal={String((i % 3) * 0.05)}><h3>{a.t}</h3><p>{a.d}</p></div>)}</div>
+      <ul class="badges">{l.badges.map((b) => <li data-reveal><strong>{b.t}</strong><span>{b.d}</span></li>)}</ul>
+    </div>
+  </section>
+  <section class="sec dark how">
+    <div class="wrap">
+      <p class="kicker" data-reveal>{l.stepsKicker}</p><h2 data-reveal=".05">{l.stepsH}</h2>
+      <ol class="steps">{l.steps.map((s, i) => <li data-reveal={String(i * 0.07)}><span class="n">{i + 1}</span><h3>{s.t}</h3><p>{s.d}</p></li>)}</ol>
+    </div>
+  </section>
+  <section class="sec quotes">
+    <div class="wrap">
+      <h2 class="qh" data-reveal>{l.quotesH}</h2>
+      <div class="qs">{l.quotes.map((q, i) => <blockquote class="card" data-reveal={String(i * 0.06)}>“{q}”<span class="mono">Blue Palm landlord partner</span></blockquote>)}</div>
+    </div>
+  </section>
+  <Faq items={l.faq} title="Common Questions" tone="white" />
+  <section class="sec" id="assessment">
+    <div class="wrap split">
+      <div>
+        <p class="kicker" data-reveal>{l.ctaKicker}</p><h2 data-reveal=".05">{l.ctaH}</h2><p class="lede" data-reveal=".1">{l.cta}</p>
+        <p class="mono small" data-reveal>{l.serving}</p>
+        <ul class="areas" data-reveal>{landlordAreas.map((a) => <li><a href={`/guaranteed-rent/${a.slug}`}>{a.name.replace(/^the /, 'The ')}</a></li>)}</ul>
+      </div>
+      <div class="card"><EnquiryForm kind="landlord" id="assess-form" /></div>
+    </div>
+  </section>
+</Base>
+<style>
+  .small { font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--blue); }
+  .statement { color: var(--blue); }
+  .vs-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .vs-grid h3 { font-size: 1.4rem; }
+  .bpc { background: var(--blue); color: #fff; border: 0; }
+  .bpc h3 { color: #fff; }
+  .bpc .ticks li::before { background-color: #fff; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.4l2.6 2.6L12 5.6' fill='none' stroke='%23213d99' stroke-width='2'/%3E%3C/svg%3E"); }
+  .stick { position: sticky; top: 110px; }
+  .r-img { aspect-ratio: 3/2; margin-top: 24px; }
+  .rl { list-style: none; padding: 0; margin: 0; }
+  .rl li { border-top: 1px solid var(--line); padding: 26px 0; }
+  .rl .n { color: var(--blue); font-size: .8rem; }
+  .rl h3 { font-size: 1.45rem; margin: 8px 0; }
+  .rl p { color: var(--muted); margin: 0; }
+  .t-h { color: #fff; font-size: var(--fs-display-3); max-width: 28ch; }
+  .stats { list-style: none; padding: 0; margin: 40px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: rgba(255,255,255,.2); border-radius: var(--r); overflow: hidden; }
+  .stats li { background: var(--blue); padding: 26px 22px; display: grid; gap: 8px; align-content: start; }
+  .stats strong { font: 780 clamp(2rem, 3.4vw, 3.2rem)/1 var(--f-display); color: #fff; }
+  .stats span { color: #dfe5fb; font-size: .92rem; }
+  .adv { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px 26px; margin: 36px 0 44px; }
+  .adv h3 { font-size: 1.4rem; } .adv p { color: var(--muted); margin: 0; }
+  .badges { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .badges li { background: var(--paper); border-radius: var(--r-s); padding: 18px; display: grid; gap: 4px; }
+  .badges strong { font-family: var(--f-display); font-size: 1.1rem; color: var(--blue); }
+  .badges span { font-size: .9rem; color: var(--muted); }
+  .how h2 { color: #fff; }
+  .steps { list-style: none; padding: 0; margin: 36px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+  .steps li { border-top: 1px solid var(--line-d); padding-top: 22px; }
+  .steps .n { display: block; font: 760 var(--fs-display-1)/.9 var(--f-display); color: transparent; -webkit-text-stroke: 1.5px #6f86e6; margin-bottom: 14px; }
+  .steps h3 { color: #fff; font-size: 1.35rem; }
+  .qh { font-size: var(--fs-display-3); max-width: 26ch; }
+  .qs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 30px; }
+  .qs blockquote { margin: 0; font: 500 1.08rem/1.5 var(--f-display); display: flex; flex-direction: column; gap: 16px; justify-content: space-between; }
+  .qs .mono { font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .areas { list-style: none; padding: 0; margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .areas a { display: inline-block; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: #fff; text-decoration: none; font-size: .9rem; }
+  .areas a:hover { background: var(--blue); color: #fff; }
+  @media (max-width: 1000px) { .stats, .badges, .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 880px) { .vs-grid, .adv, .qs { grid-template-columns: minmax(0, 1fr); } .stick { position: static; } }
+  @media (max-width: 520px) { .stats, .badges, .steps { grid-template-columns: minmax(0, 1fr); } }
+</style>

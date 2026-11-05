@@ -1,0 +1,10 @@
+---
+interface Props { items: { q: string; a: string }[]; title?: string; kicker?: string; tone?: string }
+const { items, title = 'Frequently Asked Questions', kicker = 'FAQ', tone = '' } = Astro.props;
+---
+<section class:list={['sec', tone]} aria-labelledby="faq-h">
+  <div class="wrap split">
+    <div><p class="kicker" data-reveal>{kicker}</p><h2 id="faq-h" data-reveal=".05">{title}</h2></div>
+    <div class="faq">{items.map((f) => <details data-reveal><summary>{f.q}</summary><p>{f.a}</p></details>)}</div>
+  </div>
+</section>

@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import PropertyCard from '../components/PropertyCard.astro';
+import Faq from '../components/Faq.astro';
+import GoogleReviews from '../components/GoogleReviews.astro';
+import { properties, propertiesPage as pp, SITE } from '../data/site';
+const crumbs = [{ name: 'Properties', path: '/properties' }];
+const listLd = { '@context': 'https://schema.org', '@type': 'ItemList', name: pp.h1, itemListElement: properties.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/${p.slug}`, name: p.name })) };
+const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: pp.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
+const areas = ['All', 'Pontcanna', 'Cardiff Bay'];
+---
+<Base title={pp.title} desc={pp.desc} crumbs={crumbs} schema={[listLd, faqLd]}>
+  <PageHero kicker="Properties" h1={pp.h1} lede={pp.intro[0]} crumbs={crumbs} photo="wyndham-crescent-1" photoAlt="Bright living room in a Blue Palm apartment on Wyndham Crescent, Pontcanna">
+    <a class="btn white" href="/contact">Book your stay <span class="arr">→</span></a>
+  </PageHero>
+  <section class="sec">
+    <div class="wrap">
+      <div class="bar">
+        <p class="intro">{pp.intro[1]}</p>
+        <div class="filters" role="group" aria-label="Filter by area">
+          {areas.map((a, i) => <button class:list={[{ on: i === 0 }]} data-f={a}>{a} <span class="mono">{a === 'All' ? properties.length : properties.filter((p) => p.area === a).length}</span></button>)}
+        </div>
+      </div>
+      <div class="grid">{properties.map((p, i) => <PropertyCard p={p} i={i} />)}</div>
+    </div>
+  </section>
+  <section class="sec dark spec">
+    <div class="wrap split">
+      <h2>{pp.specificH}</h2>
+      <div><p class="lede">{pp.specific}</p><a class="btn white" href="/contact">CONTACT THE TEAM <span class="arr">→</span></a></div>
+    </div>
+  </section>
+  <Faq items={pp.faq} title="FAQs" />
+  <GoogleReviews />
+</Base>
+<style>
+  .bar { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
+  .intro { color: var(--muted); max-width: 58ch; margin: 0; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filters button { font: 600 .92rem/1 var(--f-body); padding: 12px 18px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--text); cursor: pointer; }
+  .filters button .mono { font-size: .72rem; opacity: .6; margin-left: 4px; }
+  .filters button.on { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px 22px; }
+  .grid :global([hidden]) { display: none !important; }
+  .spec h2 { color: #fff; margin: 0; }
+  .spec .btn { margin-top: 10px; }
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+</style>
+<script>
+  const bs = document.querySelectorAll<HTMLButtonElement>('[data-f]');
+  bs.forEach((b) => b.addEventListener('click', () => {
+    bs.forEach((x) => x.classList.toggle('on', x === b));
+    document.querySelectorAll<HTMLElement>('[data-area]').forEach((c) => { c.hidden = b.dataset.f !== 'All' && c.dataset.area !== b.dataset.f; c.style.opacity = '1'; c.style.transform = 'none'; });
+  }));
+</script>

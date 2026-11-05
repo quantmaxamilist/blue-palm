@@ -1,0 +1,103 @@
+---
+import Base from '../layouts/Base.astro';
+import Gallery from '../components/Gallery.astro';
+import PropertyCard from '../components/PropertyCard.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import GoogleReviews from '../components/GoogleReviews.astro';
+import { properties, corporateRates, yourStay, corporate, SITE, img, google } from '../data/site';
+export function getStaticPaths() { return properties.map((p) => ({ params: { property: p.slug }, props: { p } })); }
+const { p } = Astro.props;
+const others = properties.filter((x) => x.slug !== p.slug).sort((a, b) => (a.area === p.area ? -1 : 1) - (b.area === p.area ? -1 : 1)).slice(0, 3);
+const crumbs = [{ name: 'Properties', path: '/properties' }, { name: p.name, path: `/${p.slug}` }];
+const ld = {
+  '@context': 'https://schema.org', '@type': 'Apartment', name: `${p.name} — Blue Palm serviced apartment`, url: `${SITE}/${p.slug}`,
+  description: p.details[0], image: p.imgs.slice(0, 6).map((k) => SITE + img(k)),
+  numberOfRooms: p.beds + 1, numberOfBedrooms: p.beds, numberOfBathroomsTotal: p.baths, occupancy: { '@type': 'QuantitativeValue', maxValue: p.sleeps },
+  floorSize: { '@type': 'QuantitativeValue', value: p.sqft, unitCode: 'FTK' },
+  address: { '@type': 'PostalAddress', streetAddress: p.street, addressLocality: 'Cardiff', addressRegion: p.area, addressCountry: 'GB' },
+  amenityFeature: ['WiFi', 'Fully equipped kitchen', 'Smart TV', 'Washing machine', 'Weekly cleaning', 'Fresh linen'].map((n) => ({ '@type': 'LocationFeatureSpecification', name: n, value: true })),
+  containedInPlace: { '@id': SITE + '/#business' },
+};
+const facts = [
+  { n: String(p.beds), l: p.beds === 1 ? 'Bedroom' : 'Bedrooms' },
+  { n: String(p.baths), l: p.baths === 1 ? 'Bathroom' : 'Bathrooms' },
+  { n: String(p.sleeps), l: 'Sleeps' },
+  { n: p.sqft.toLocaleString('en-GB'), l: 'sq ft' },
+];
+---
+<Base title={p.title} desc={p.desc} path={`/${p.slug}`} crumbs={crumbs} schema={[ld]} heroDark={false}>
+  <section class="top">
+    <div class="wrap">
+      <nav class="bc mono" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/properties">Properties</a><span>/</span><span aria-current="page">{p.name}</span></nav>
+      <div class="title">
+        <div>
+          <p class="kicker">{p.area} · Serviced apartment</p>
+          <h1>{p.name}</h1>
+        </div>
+        <a class="btn" href={`/contact?package=${p.slug}`}>Request Corporate Rates <span class="arr">→</span></a>
+      </div>
+      <Gallery keys={p.imgs} name={p.name} />
+      <ul class="facts">{facts.map((f) => <li><strong>{f.n}</strong><span class="mono">{f.l}</span></li>)}</ul>
+    </div>
+  </section>
+  <section class="sec body">
+    <div class="wrap split">
+      <div class="details">
+        <h2>About this home</h2>
+        {p.details.map((d) => <p>{d}</p>)}
+        {p.review && (
+          <figure class="rev"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><blockquote>“{p.review.q}”</blockquote><figcaption>— {p.review.n}</figcaption></figure>
+        )}
+      </div>
+      <aside class="side">
+        <div class="card">
+          <p class="kicker">Your stay with Blue Palm</p>
+          <p>{yourStay}</p>
+          <ul class="ticks">{corporate.why.map((w) => <li><span><strong>{w.t}.</strong> {w.d.split('.')[0]}.</span></li>)}</ul>
+          <p class="rates">{corporateRates}</p>
+          <a class="btn" href={`/contact?package=${p.slug}`}>Request Corporate Rates <span class="arr">→</span></a>
+          <a class="glink" href={google.url} target="_blank" rel="noopener">★ {google.rating.toFixed(1)} on Google · {google.count} reviews</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+  <section class="sec white" id="book" aria-labelledby="bk-h">
+    <div class="wrap split">
+      <div><p class="kicker">Book your stay</p><h2 id="bk-h">Enquire about {p.street}</h2><p class="lede">Tell us a little about your dates and what brings you to Cardiff. We’ll come back with availability, a clear price and the right answers.</p></div>
+      <div class="card"><EnquiryForm property={p.slug} /></div>
+    </div>
+  </section>
+  <section class="sec more">
+    <div class="wrap">
+      <div class="m-head"><h2>More apartments</h2><a class="link" href="/properties">All properties →</a></div>
+      <div class="grid3">{others.map((o, i) => <PropertyCard p={o} i={i} />)}</div>
+    </div>
+  </section>
+</Base>
+<style>
+  .top { padding: 120px 0 20px; }
+  .bc { display: flex; gap: 8px; flex-wrap: wrap; font-size: .74rem; color: var(--muted); margin-bottom: 22px; }
+  .bc a { text-decoration: none; } .bc a:hover { text-decoration: underline; }
+  .title { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 26px; }
+  .title h1 { margin: 0; font-size: var(--fs-display-2); }
+  .facts { list-style: none; padding: 0; margin: 22px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: var(--r); background: #fff; }
+  .facts li { padding: 20px 24px; display: grid; gap: 4px; border-left: 1px solid var(--line); }
+  .facts li:first-child { border-left: 0; }
+  .facts strong { font: 760 2rem/1 var(--f-display); color: var(--blue); }
+  .facts .mono { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .details p { color: var(--muted); }
+  .rev { margin: 36px 0 0; padding: 28px; border-radius: var(--r); background: var(--blue); color: #fff; }
+  .rev blockquote { margin: 10px 0 14px; font: 500 1.2rem/1.45 var(--f-display); }
+  .rev .st { color: var(--star); letter-spacing: 3px; }
+  .rev figcaption { color: #dfe5fb; font-weight: 600; }
+  .side .card { position: sticky; top: 110px; display: grid; gap: 14px; }
+  .side .card p { margin: 0; color: var(--muted); }
+  .side .ticks { font-size: .93rem; }
+  .rates { font-weight: 600; color: var(--text) !important; }
+  .glink { font-size: .85rem; color: var(--muted); text-decoration: none; }
+  .glink:hover { color: var(--blue); }
+  .m-head { display: flex; justify-content: space-between; align-items: end; margin-bottom: 30px; }
+  .m-head h2 { margin: 0; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 22px; }
+  @media (max-width: 900px) { .grid3 { grid-template-columns: minmax(0, 1fr); } .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .facts li:nth-child(3) { border-left: 0; } .facts li:nth-child(n + 3) { border-top: 1px solid var(--line); } .side .card { position: static; } .top { padding-top: 100px; } }
+</style>

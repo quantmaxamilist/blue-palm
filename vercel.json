@@ -1,0 +1,77 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/homepage-1",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/landlord",
+      "destination": "/agents-landlords",
+      "permanent": true
+    },
+    {
+      "source": "/cart",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/tag/:tag",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/blog/category/:cat",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/see-all-amenities-1",
+      "destination": "/hamilton-top-floor",
+      "permanent": true
+    },
+    {
+      "source": "/see-all-amenities-2",
+      "destination": "/fairleigh-road-2",
+      "permanent": true
+    },
+    {
+      "source": "/see-all-amenities-3",
+      "destination": "/hamilton-ground-floor",
+      "permanent": true
+    },
+    {
+      "source": "/see-all-amenities-4",
+      "destination": "/wyndham-crescent",
+      "permanent": true
+    },
+    {
+      "source": "/see-all-amenities-5",
+      "destination": "/penhill-rd",
+      "permanent": true
+    },
+    {
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/book-your-stay",
+      "destination": "/contact",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)\\.(webp|png|woff2|js|css)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}

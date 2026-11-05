@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Pic from '../components/Pic.astro';
+import PropertyCard from '../components/PropertyCard.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import { cardiffBay as b, properties, contact, SITE } from '../data/site';
+const crumbs = [{ name: 'Cardiff Bay', path: '/cardiff-bay' }];
+const bay = properties.filter((p) => p.area === 'Cardiff Bay');
+const place = { '@context': 'https://schema.org', '@type': 'Place', name: 'Cardiff Bay', containedInPlace: { '@type': 'City', name: 'Cardiff' }, url: SITE + '/cardiff-bay' };
+---
+<Base title={b.title} desc={b.desc} crumbs={crumbs} schema={[place]}>
+  <PageHero kicker="The Blue Palm difference" h1={b.h1} lede={b.lede} crumbs={crumbs} photo="misc-9" photoAlt="Cardiff Bay waterfront at sunset">
+    <a class="btn white" href="#book">Enquire to stay <span class="arr">→</span></a>
+  </PageHero>
+  <section class="sec">
+    <div class="wrap split">
+      <div><p class="kicker" data-reveal>{b.diffK}</p><h2 data-reveal=".05">{b.diffH}</h2><p class="lede" data-reveal=".1">{b.diff}</p></div>
+      <div class="facts">{b.facts.map((f) => <div data-reveal><strong>{f.n}</strong><span>{f.d}</span></div>)}<p data-reveal>{b.calm}</p></div>
+    </div>
+  </section>
+  <section class="sec white">
+    <div class="wrap split">
+      <div class="ph tall" data-reveal><Pic k="mount-square-1" alt="Living room in the Mount Stuart Square apartment, Cardiff Bay" sizes="(max-width: 880px) 100vw, 45vw" /></div>
+      <div>
+        <p class="kicker" data-reveal>{b.arriveK}</p><h2 data-reveal=".05">{b.arriveH}</h2><p class="lede" data-reveal=".1">{b.arrive}</p>
+        <ul class="ticks" data-reveal=".12">{b.arriveList.map((x) => <li><span>{x}</span></li>)}</ul>
+      </div>
+    </div>
+  </section>
+  <section class="sec dark">
+    <div class="wrap split">
+      <div><p class="kicker" data-reveal>{b.wayK}</p><h2 class="w" data-reveal=".05">{b.wayH}</h2><p class="lede" data-reveal=".1">{b.way}</p></div>
+      <div class="ph wide" data-reveal><Pic k="misc-10" alt="Wales Millennium Centre, Cardiff Bay" sizes="(max-width: 880px) 100vw, 45vw" w={800} /></div>
+    </div>
+  </section>
+  <section class="sec white">
+    <div class="wrap">
+      <h2>In Cardiff Bay</h2>
+      <div class="grid3">{bay.map((p, i) => <PropertyCard p={p} i={i} />)}</div>
+    </div>
+  </section>
+  <section class="sec" id="book">
+    <div class="wrap split">
+      <div><p class="kicker" data-reveal>Enquiry</p><h2 data-reveal=".05">{b.bookH}</h2><p class="lede" data-reveal=".1">{b.book}</p><p class="mono" data-reveal>{contact.reply}</p></div>
+      <div class="card"><EnquiryForm property="mount-square" /></div>
+    </div>
+  </section>
+</Base>
+<style>
+  .facts { display: grid; gap: 18px; }
+  .facts div { display: grid; gap: 4px; border-top: 1px solid var(--line); padding-top: 16px; }
+  .facts strong { font: 760 var(--fs-display-3)/1 var(--f-display); color: var(--blue); }
+  .facts span, .facts p { color: var(--muted); }
+  .tall { aspect-ratio: 4/5; }
+  .wide { aspect-ratio: 4/3; }
+  .w { color: #fff; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 30px; }
+  .mono { font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--blue); }
+  @media (max-width: 900px) { .grid3 { grid-template-columns: minmax(0, 1fr); } }
+</style>

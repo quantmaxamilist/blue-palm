@@ -1,0 +1,87 @@
+---
+import { nav, contact } from '../data/site';
+interface Props { heroDark?: boolean }
+const { heroDark = true } = Astro.props;
+const here = Astro.url.pathname.replace(/\.html$/, '');
+const isProp = ['/penhill-rd', '/hamilton', '/wyndham', '/farleighroad', '/fairleigh', '/cathedral-rd', '/mount-square'].some((p) => here.startsWith(p));
+---
+<header class:list={['hdr', { light: !heroDark }]} data-hdr>
+  <div class="wrap hdr-in">
+    <a href="/" class="logo" aria-label="Blue Palm — home">
+      <img src="/img/brand/blue-palm-logo.png" width="52" height="52" alt="" />
+      <span class="wm">Blue Palm</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      {nav.map((n) => <a href={n.href} aria-current={here.startsWith(n.href) || (n.href === '/properties' && isProp) ? 'page' : undefined}>{n.label}</a>)}
+    </nav>
+    <div class="cta">
+      <a class="mail mono" href={`mailto:${contact.email}`}>{contact.email}</a>
+      <a class="btn" href="/contact">Book your stay</a>
+      <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mnav" data-burger><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mnav" id="mnav" hidden>
+    <nav aria-label="Mobile">
+      <a href="/">Home</a>
+      {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+      <a href="/contact-1">Free property assessment</a>
+    </nav>
+    <div class="mfoot">
+      <a class="btn white" href="/contact">Book your stay</a>
+      <a class="btn ghost light" href={`mailto:${contact.email}`}>{contact.email}</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .hdr { position: fixed; inset: 0 0 auto; z-index: var(--z-header); color: #fff; transition: background 0.35s, color 0.35s, box-shadow 0.35s, transform 0.45s var(--ease); }
+  .hdr.solid, .hdr.light { background: rgba(245, 242, 236, 0.97); color: var(--text); box-shadow: 0 1px 0 var(--line); }
+  .hdr.hide { transform: translateY(-100%); }
+  .hdr-in { display: flex; align-items: center; gap: 24px; height: 84px; }
+  .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; flex: none; }
+  .logo img { width: 52px; height: 52px; }
+  .wm { font: 760 1.45rem/1 var(--f-display); letter-spacing: -0.02em; }
+  .nav { display: flex; gap: 2px; margin-left: auto; }
+  .nav a { text-decoration: none; font: 500 0.94rem/1 var(--f-body); padding: 10px 12px; border-radius: 999px; opacity: 0.86; transition: opacity 0.2s, background 0.2s; }
+  .nav a:hover, .nav a[aria-current] { opacity: 1; background: color-mix(in srgb, currentColor 10%, transparent); }
+  .cta { display: flex; align-items: center; gap: 14px; }
+  .mail { font-size: 0.8rem; text-decoration: none; opacity: 0.85; }
+  .mail:hover { opacity: 1; text-decoration: underline; }
+  .cta .btn { min-height: 46px; padding: 0 1.25em; }
+  .burger { display: none; width: 48px; height: 48px; border-radius: 50%; border: 1px solid color-mix(in srgb, currentColor 30%, transparent); background: transparent; color: inherit; position: relative; cursor: pointer; }
+  .burger span { position: absolute; left: 15px; right: 15px; height: 1.6px; background: currentColor; transition: transform 0.3s var(--ease); }
+  .burger span:first-child { top: 20px; } .burger span:last-child { top: 27px; }
+  .burger[aria-expanded='true'] span:first-child { transform: translateY(3.5px) rotate(45deg); }
+  .burger[aria-expanded='true'] span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
+  .mnav { position: fixed; inset: 84px 0 0; background: var(--blue); color: #fff; padding: 20px var(--gut) 28px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; }
+  .mnav[hidden] { display: none; }
+  .mnav nav { display: grid; }
+  .mnav nav a { text-decoration: none; font: 700 1.9rem/1 var(--f-display); letter-spacing: -0.02em; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.18); }
+  .mfoot { display: grid; gap: 10px; margin-top: 24px; }
+  .mfoot .btn { width: 100%; }
+  @media (max-width: 1180px) { .mail { display: none; } }
+  @media (max-width: 1040px) { .nav { display: none; } .burger { display: block; } .cta { margin-left: auto; } }
+  @media (max-width: 560px) { .cta .btn { display: none; } .hdr-in { height: 72px; } .mnav { inset: 72px 0 0; } .logo img { width: 44px; height: 44px; } .wm { font-size: 1.3rem; } }
+</style>
+
+<script>
+  const hdr = document.querySelector<HTMLElement>('[data-hdr]');
+  const b = document.querySelector<HTMLButtonElement>('[data-burger]');
+  const m = document.getElementById('mnav');
+  if (hdr && b && m) {
+    let last = 0;
+    const on = () => {
+      const y = scrollY;
+      hdr.classList.toggle('solid', y > 40 && m.hidden);
+      hdr.classList.toggle('hide', y > 480 && y > last && m.hidden);
+      last = y;
+    };
+    addEventListener('scroll', on, { passive: true }); on();
+    b.addEventListener('click', () => {
+      const open = m.hidden; m.hidden = !open; b.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+      hdr.style.color = open ? '#fff' : ''; hdr.style.background = open ? 'var(--blue)' : ''; on();
+    });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && !m.hidden) b.click(); });
+  }
+</script>
