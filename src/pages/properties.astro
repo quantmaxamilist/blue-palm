@@ -22,7 +22,7 @@ const areas = ['All', 'Pontcanna', 'Cardiff Bay'];
           {areas.map((a, i) => <button class:list={[{ on: i === 0 }]} data-f={a}>{a} <span class="mono">{a === 'All' ? properties.length : properties.filter((p) => p.area === a).length}</span></button>)}
         </div>
       </div>
-      <div class="grid">{properties.map((p, i) => <PropertyCard p={p} i={i} />)}</div>
+      <div class="grid">{properties.map((p, i) => <PropertyCard p={p} i={i} map />)}</div>
     </div>
   </section>
   <section class="sec dark spec">

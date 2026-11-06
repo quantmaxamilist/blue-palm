@@ -1,18 +1,23 @@
 ---
 import Pic from './Pic.astro';
+import PropertyMap from './PropertyMap.astro';
 import type { Property } from '../data/site';
-interface Props { p: Property; i?: number }
-const { p, i = 0 } = Astro.props;
+interface Props { p: Property; i?: number; map?: boolean }
+const { p, i = 0, map = false } = Astro.props;
 ---
-<a class="pc" href={`/${p.slug}`} data-area={p.area} data-reveal={String((i % 3) * 0.06)}>
+<div class="pcw" data-area={p.area} data-reveal={String((i % 3) * 0.06)}>
+<a class="pc" href={`/${p.slug}`}>
   <div class="ph"><Pic k={p.imgs[0]} alt={`${p.name} serviced apartment`} sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" w={800} /><span class="area mono">{p.area}</span></div>
   <h3>{p.name}</h3>
   <p class="spec mono">{p.spec}</p>
   <p class="d">{p.card}</p>
   <span class="link">View apartment <span aria-hidden="true">→</span></span>
 </a>
+{map && <PropertyMap p={p} compact />}
+</div>
 <style>
-  .pc { display: flex; flex-direction: column; text-decoration: none; }
+  .pcw { display: flex; flex-direction: column; }
+  .pc { flex: 1; display: flex; flex-direction: column; text-decoration: none; }
   .ph { aspect-ratio: 4 / 3; margin-bottom: 18px; }
   .ph :global(img) { transition: transform 1s var(--ease); }
   .pc:hover .ph :global(img) { transform: scale(1.05); }

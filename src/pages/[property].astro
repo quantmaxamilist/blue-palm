@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Gallery from '../components/Gallery.astro';
+import PropertyMap from '../components/PropertyMap.astro';
 import PropertyCard from '../components/PropertyCard.astro';
 import EnquiryForm from '../components/EnquiryForm.astro';
 import GoogleReviews from '../components/GoogleReviews.astro';
@@ -61,6 +62,13 @@ const facts = [
       </aside>
     </div>
   </section>
+  <section class="sec loc" aria-labelledby="loc-h">
+    <div class="wrap">
+      <p class="kicker">Location</p>
+      <h2 id="loc-h">{p.street}, {p.area}</h2>
+      <PropertyMap p={p} />
+    </div>
+  </section>
   <section class="sec white" id="book" aria-labelledby="bk-h">
     <div class="wrap split">
       <div><p class="kicker">Book your stay</p><h2 id="bk-h">Enquire about {p.street}</h2><p class="lede">Tell us a little about your dates and what brings you to Cardiff. We’ll come back with availability, a clear price and the right answers.</p></div>
@@ -100,4 +108,5 @@ const facts = [
   .m-head h2 { margin: 0; }
   .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 22px; }
   @media (max-width: 900px) { .grid3 { grid-template-columns: minmax(0, 1fr); } .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .facts li:nth-child(3) { border-left: 0; } .facts li:nth-child(n + 3) { border-top: 1px solid var(--line); } .side .card { position: static; } .top { padding-top: 100px; } }
+  .loc { padding-top: 0; }
 </style>
