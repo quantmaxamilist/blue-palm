@@ -21,8 +21,7 @@ import { home, google } from '../data/site';
     <p class="lede" data-l>{home.lede}</p>
     <div class="ctas" data-l>
       <a class="btn white" href="/contact">Book your stay <span class="arr">→</span></a>
-      <a class="btn ghost light" href="/serviced-accommodation-cardiff">For Corporates</a>
-      <a class="btn ghost light" href="/agents-landlords">For Landlords</a>
+      <a class="btn ghost light" href="/agents-landlords">I’m a landlord</a>
     </div>
   </div>
   <a class="badge" href="#google-reviews" data-l aria-label={`Rated ${google.rating.toFixed(1)} on Google from ${google.count} reviews`}>
@@ -69,6 +68,7 @@ import { home, google } from '../data/site';
     .shade { background: linear-gradient(0deg, rgba(6,13,34,.9) 0%, rgba(6,13,34,.55) 50%, rgba(6,13,34,.25) 100%); }
     .ctas .btn { flex: 1 1 200px; }
   }
+  @media (max-width: 360px) { .badge { width: 92px; height: 92px; right: 10px; } .badge text { font-size: 13px; } .b-in { width: 58px; height: 58px; } .b-in strong { font-size: 1rem; } }
 </style>
 
 <script>

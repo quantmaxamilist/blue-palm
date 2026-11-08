@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { contact } from '../data/site';
+---
+<Base title="Thank you — Blue Palm Corporate Housing Cardiff" desc="Your enquiry has been sent to Blue Palm." noindex band={false}>
+  <PageHero kicker="Enquiry sent" h1="Thank you — we’ll be in touch." lede="We’ve received your details and will contact you to arrange your free property assessment and rental valuation.">
+    <a class="btn white" href="/agents-landlords">Back to landlords <span class="arr">→</span></a>
+    <a class="btn ghost light" href={`mailto:${contact.email}`}>{contact.email}</a>
+  </PageHero>
+</Base>
+<script is:inline>
+  // Conversion event: fires only after a real form submission (redirect from the enquiry form).
+  (function () { var k = null; try { k = sessionStorage.getItem('bp-lead'); sessionStorage.removeItem('bp-lead'); } catch (e) {}
+    window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'generate_lead', lead_type: 'landlord', lead_verified: k === 'landlord' }); })();
+</script>

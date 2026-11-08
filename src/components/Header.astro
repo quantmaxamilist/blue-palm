@@ -24,7 +24,7 @@ const isProp = ['/penhill-rd', '/hamilton', '/wyndham', '/farleighroad', '/fairl
     <nav aria-label="Mobile">
       <a href="/">Home</a>
       {nav.map((n) => <a href={n.href}>{n.label}</a>)}
-      <a href="/contact-1">Free property assessment</a>
+      <a href="/agents-landlords#valuation">Free property assessment</a>
     </nav>
     <div class="mfoot">
       <a class="btn white" href="/contact">Book your stay</a>
@@ -61,6 +61,7 @@ const isProp = ['/penhill-rd', '/hamilton', '/wyndham', '/farleighroad', '/fairl
   .mfoot .btn { width: 100%; }
   @media (max-width: 1180px) { .mail { display: none; } }
   @media (max-width: 1040px) { .nav { display: none; } .burger { display: block; } .cta { margin-left: auto; } }
+  @media (max-width: 400px) { .wm { display: none; } }
   @media (max-width: 560px) { .cta .btn { min-height: 40px; padding: 0 .85em; font-size: .84rem; } .hdr-in { height: 72px; } .mnav { inset: 72px 0 0; } .logo img { width: 44px; height: 44px; } .wm { font-size: 1.3rem; } }
 </style>
 

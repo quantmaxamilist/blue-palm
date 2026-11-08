@@ -123,3 +123,5 @@ html:not(.js) [data-reveal], .reduced [data-reveal] { opacity: 1; transform: non
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   [data-reveal] { opacity: 1 !important; transform: none !important; }
 }
+
+@media (max-width: 380px) { .btn { white-space: normal; text-align: center; line-height: 1.2; padding-block: .7em; } }

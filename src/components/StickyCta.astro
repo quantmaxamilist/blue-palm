@@ -1,0 +1,24 @@
+---
+interface Props { href?: string; label?: string; target?: string; always?: boolean }
+const { href = '#enquire', label = 'Check availability', target = '#enquire', always = false } = Astro.props;
+---
+<div class="scta" data-scta data-target={target} data-always={always ? "1" : undefined} hidden>
+  <a class="btn" href={href}>{label} <span class="arr">→</span></a>
+</div>
+<style>
+  .scta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: rgba(255,255,255,.96); border-top: 1px solid var(--line); box-shadow: 0 -10px 30px -18px rgba(10,20,48,.4); transform: translateY(110%); transition: transform .35s var(--ease); }
+  .scta.show { transform: none; }
+  .scta .btn { width: 100%; }
+  @media (min-width: 761px) { .scta { display: none !important; } }
+</style>
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-scta]');
+  if (bar && matchMedia('(max-width: 760px)').matches) {
+    bar.hidden = false; if (bar.dataset.always === '1') requestAnimationFrame(() => bar.classList.add('show'));
+    const tgt = document.querySelector(bar.dataset.target || '#enquire');
+    let past = bar.dataset.always === '1', inForm = false;
+    const upd = () => bar.classList.toggle('show', past && !inForm);
+    addEventListener('scroll', () => { past = bar.dataset.always === '1' || scrollY > innerHeight * 0.6; upd(); }, { passive: true });
+    if (tgt) new IntersectionObserver(([e]) => { inForm = e.isIntersecting; upd(); }, { threshold: 0.05 }).observe(tgt);
+  }
+</script>

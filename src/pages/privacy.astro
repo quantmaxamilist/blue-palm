@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { brand, contact } from '../data/site';
+const crumbs = [{ name: 'Privacy Policy', path: '/privacy' }];
+---
+<Base title="Privacy Policy — Blue Palm Corporate Housing Cardiff" desc="How Blue Palm Apartments Ltd collects, uses and protects the personal information you share through this website." crumbs={crumbs} band={false}>
+  <PageHero h1="Privacy Policy" crumbs={crumbs} />
+  <section class="sec white"><div class="wrap prose">
+    <p>This policy explains how {brand.legal} (“Blue Palm”, “we”) uses the personal information you give us through bluepalmproperty.co.uk. {brand.reg}.</p>
+    <h2>What we collect</h2>
+    <p>When you send an enquiry we collect the details you enter — usually your name, email address, phone number, stay dates and number of guests, or, for landlords, your property postcode and the service you’re interested in — plus anything you add in a note.</p>
+    <h2>How we use it</h2>
+    <p>We use these details only to reply to your enquiry, check availability, prepare a quote or property assessment, and manage any booking or agreement that follows. We do not sell your information or use it for unrelated marketing.</p>
+    <h2>Lawful basis</h2>
+    <p>We process your information because you have asked us to respond to an enquiry and to take steps before entering into a contract (legitimate interests and contract under UK GDPR).</p>
+    <h2>Who we share it with</h2>
+    <p>Form submissions are delivered to our inbox by our form provider (Web3Forms). Our website uses Google Tag Manager and Google Analytics to measure visits and enquiries, and Google Ads to understand which adverts bring enquiries. These services act as processors on our behalf.</p>
+    <h2>How long we keep it</h2>
+    <p>We keep enquiry details for as long as needed to deal with your enquiry and any resulting booking or agreement, and for any period required by law (for example, accounting records).</p>
+    <h2>Your rights</h2>
+    <p>You can ask to see, correct or delete the personal information we hold about you, or object to how we use it, by emailing <a href={`mailto:${contact.email}`}>{contact.email}</a>. If you’re unhappy with how we handle your data you can complain to the Information Commissioner’s Office (ico.org.uk).</p>
+  </div></section>
+</Base>
+<style>.prose { max-width: 760px; } .prose h2 { font-size: 1.35rem; margin-top: 1.8em; } .prose p { color: var(--muted); }</style>

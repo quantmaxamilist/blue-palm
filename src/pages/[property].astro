@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Gallery from '../components/Gallery.astro';
 import PropertyMap from '../components/PropertyMap.astro';
+import StickyCta from '../components/StickyCta.astro';
 import PropertyCard from '../components/PropertyCard.astro';
 import EnquiryForm from '../components/EnquiryForm.astro';
 import GoogleReviews from '../components/GoogleReviews.astro';
@@ -64,8 +65,9 @@ const facts = [
   </section>
   <section class="sec loc" aria-labelledby="loc-h">
     <div class="wrap">
-      <p class="kicker">Location</p>
+      <p class="kicker">About the neighbourhood</p>
       <h2 id="loc-h">{p.street}, {p.area}</h2>
+      <p class="lede loc-l">Tap a category to see what’s nearby.</p>
       <PropertyMap p={p} />
     </div>
   </section>
@@ -81,6 +83,7 @@ const facts = [
       <div class="grid3">{others.map((o, i) => <PropertyCard p={o} i={i} />)}</div>
     </div>
   </section>
+  <StickyCta href="#book" target="#book" label="Enquire about this apartment" />
 </Base>
 <style>
   .top { padding: 120px 0 20px; }
@@ -108,5 +111,6 @@ const facts = [
   .m-head h2 { margin: 0; }
   .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 22px; }
   @media (max-width: 900px) { .grid3 { grid-template-columns: minmax(0, 1fr); } .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .facts li:nth-child(3) { border-left: 0; } .facts li:nth-child(n + 3) { border-top: 1px solid var(--line); } .side .card { position: static; } .top { padding-top: 100px; } }
-  .loc { padding-top: 0; }
+  .loc { padding-top: 0; overflow-x: clip; }
+  .loc-l { margin-bottom: 18px; }
 </style>

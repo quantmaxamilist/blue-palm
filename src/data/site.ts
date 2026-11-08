@@ -20,7 +20,10 @@ export const contact = {
   // No public phone number on the old site or the Google profile — add here when supplied.
   phone: '' as string,
   phoneHref: '' as string,
+  // WhatsApp number (digits only, e.g. '447xxxxxxxxx') — shown as a "Message us on WhatsApp" link next to forms. Number is never printed on the page.
+  whatsapp: '' as string,
 };
+export const tracking = { gtm: 'GTM-56BPQJ4L' }; // [client brief] keep the GTM container on every page
 
 export const social = {
   facebook: 'https://www.facebook.com/BluePalmCorporateHousing', // [V]
@@ -361,7 +364,7 @@ export const landlords = {
     { n: '100%', d: 'Landlords surveyed said they were happier working with us rather than short term tenants.' },
     { n: '£0 voids', d: 'No landlords that we have worked with has received any void periods' },
     { n: '7+ years', d: 'Blue palm has been working with landlords in Cardiff since 2019' },
-    { n: '1,207+', d: 'Guest nights booked in 2026' },
+    { n: '1,850+', d: 'Guest nights booked in 2026' },
   ], // [V]
   advKicker: 'Why Landlords Choose Blue Palm', // [V]
   advH: 'Every advantage, none of the stress.', // [V]

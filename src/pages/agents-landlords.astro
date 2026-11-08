@@ -14,9 +14,20 @@ const howLd = { '@context': 'https://schema.org', '@type': 'HowTo', name: l.step
 ---
 <Base title={l.title} desc={l.desc} crumbs={crumbs} schema={[faqLd, svc, howLd]}>
   <PageHero kicker={l.kicker} h1={l.h1} lede={l.sub} crumbs={crumbs} photo="hamilton-ground-floor-2" photoAlt="Dining and living space in a Blue Palm apartment on Hamilton Street">
-    <a class="btn white" href="/contact-1">Free Property Assessment <span class="arr">→</span></a>
+    <a class="btn white" href="#valuation">Get a rental valuation <span class="arr">→</span></a>
     <a class="btn ghost light" href="#open-calculator">Compare your rental profits →</a>
   </PageHero>
+  <section class="sec val" id="valuation" aria-labelledby="val-h">
+    <div class="wrap split">
+      <div>
+        <p class="kicker">Free — no obligation</p>
+        <h2 id="val-h">{l.ctaH}</h2>
+        <p class="lede">{l.cta}</p>
+        <ul class="ticks">{l.bp.slice(0, 4).map((t) => <li><span>{t}</span></li>)}</ul>
+      </div>
+      <div class="card"><h3 class="fh">Get a rental valuation</h3><EnquiryForm kind="landlord" id="valuation-form" /></div>
+    </div>
+  </section>
   <section class="sec">
     <div class="wrap split">
       <div><p class="statement" data-reveal>{l.note}</p></div>
@@ -73,18 +84,19 @@ const howLd = { '@context': 'https://schema.org', '@type': 'HowTo', name: l.step
     </div>
   </section>
   <Faq items={l.faq} title="Common Questions" tone="white" />
-  <section class="sec" id="assessment">
-    <div class="wrap split">
-      <div>
-        <p class="kicker" data-reveal>{l.ctaKicker}</p><h2 data-reveal=".05">{l.ctaH}</h2><p class="lede" data-reveal=".1">{l.cta}</p>
-        <p class="mono small" data-reveal>{l.serving}</p>
-        <ul class="areas" data-reveal>{landlordAreas.map((a) => <li><a href={`/guaranteed-rent/${a.slug}`}>{a.name.replace(/^the /, 'The ')}</a></li>)}</ul>
-      </div>
-      <div class="card"><EnquiryForm kind="landlord" id="assess-form" /></div>
+  <section class="sec white" id="areas">
+    <div class="wrap">
+      <p class="mono small" data-reveal>{l.serving}</p>
+      <ul class="areas" data-reveal>{landlordAreas.map((a) => <li><a href={`/guaranteed-rent/${a.slug}`}>{a.name.replace(/^the /, 'The ')}</a></li>)}</ul>
+      <a class="btn" href="#valuation" style="margin-top: 24px">Get a rental valuation <span class="arr">→</span></a>
     </div>
   </section>
 </Base>
 <style>
+  .val { padding-block: clamp(40px, 6vw, 90px); scroll-margin-top: 80px; }
+  .val .ticks { margin-top: 20px; }
+  .fh { font-size: 1.5rem; }
+  @media (max-width: 880px) { .val .split > div:first-child .ticks { display: none; } }
   .small { font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--blue); }
   .statement { color: var(--blue); }
   .vs-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }

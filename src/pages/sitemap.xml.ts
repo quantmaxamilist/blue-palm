@@ -4,7 +4,7 @@ import { SITE, properties, guestAreas, landlordAreas } from '../data/site';
 export const GET: APIRoute = () => {
   const today = new Date().toISOString().slice(0, 10);
   const u: [string, string, string?][] = [
-    ['/', '1.0'], ['/properties', '0.9'], ['/serviced-accommodation-cardiff', '0.9'], ['/agents-landlords', '0.9'], ['/management', '0.8'], ['/aboutus', '0.6'], ['/pontcanna', '0.7'], ['/cardiff-bay', '0.7'], ['/contact', '0.8'], ['/contact-1', '0.7'], ['/blog', '0.7'], ['/serviced-apartments', '0.6'], ['/guaranteed-rent', '0.6'],
+    ['/', '1.0'], ['/properties', '0.9'], ['/serviced-accommodation-cardiff', '0.9'], ['/agents-landlords', '0.9'], ['/management', '0.8'], ['/aboutus', '0.6'], ['/pontcanna', '0.7'], ['/cardiff-bay', '0.7'], ['/contact', '0.8'], ['/privacy', '0.2'], ['/blog', '0.7'], ['/serviced-apartments', '0.6'], ['/guaranteed-rent', '0.6'],
     ...properties.map((p) => [`/${p.slug}`, '0.8'] as [string, string]),
     ...guestAreas.map((a) => [`/serviced-apartments/${a.slug}`, '0.6'] as [string, string]),
     ...landlordAreas.map((a) => [`/guaranteed-rent/${a.slug}`, '0.6'] as [string, string]),

@@ -4,11 +4,19 @@ import PageHero from '../components/PageHero.astro';
 import PropertyCard from '../components/PropertyCard.astro';
 import Faq from '../components/Faq.astro';
 import GoogleReviews from '../components/GoogleReviews.astro';
-import { properties, propertiesPage as pp, SITE } from '../data/site';
+import { properties, propertiesPage as pp, SITE, corporate, google } from '../data/site';
 const crumbs = [{ name: 'Properties', path: '/properties' }];
 const listLd = { '@context': 'https://schema.org', '@type': 'ItemList', name: pp.h1, itemListElement: properties.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/${p.slug}`, name: p.name })) };
 const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: pp.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
 const areas = ['All', 'Pontcanna', 'Cardiff Bay'];
+const icons: Record<string, string> = {
+  'Multi units': '<path d="M3 21V9l6-4 6 4v12M9 21v-5h0M15 21h6V11l-6-3" />',
+  'Bills included': '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 16h3" />',
+  'Cleaning & Linen': '<path d="M4 11h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM7 11V6a3 3 0 0 1 6 0M16 7l3-3" />',
+  'Dedicated Contact': '<path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0" />',
+};
+const first = (d: string) => { const s = d.split(/(?<=\.)\s/); return s[0].length < 40 ? s.slice(0, 2).join(" ") : s[0]; };
+const perks = corporate.why.slice(0, 3).map((w) => ({ t: w.t, d: first(w.d), i: icons[w.t] }));
 ---
 <Base title={pp.title} desc={pp.desc} crumbs={crumbs} schema={[listLd, faqLd]}>
   <PageHero kicker="Properties" h1={pp.h1} lede={pp.intro[0]} crumbs={crumbs} photo="wyndham-crescent-1" photoAlt="Bright living room in a Blue Palm apartment on Wyndham Crescent, Pontcanna">
@@ -22,7 +30,26 @@ const areas = ['All', 'Pontcanna', 'Cardiff Bay'];
           {areas.map((a, i) => <button class:list={[{ on: i === 0 }]} data-f={a}>{a} <span class="mono">{a === 'All' ? properties.length : properties.filter((p) => p.area === a).length}</span></button>)}
         </div>
       </div>
-      <div class="grid">{properties.map((p, i) => <PropertyCard p={p} i={i} map />)}</div>
+      <div class="grid">
+        {properties.map((p, i) => (
+          <>
+            <PropertyCard p={p} i={i} />
+            {i === 2 && (
+              <aside class="banner" data-banner aria-label="Why companies choose Blue Palm">
+                <h2>Why guests choose Blue Palm</h2>
+                <ul>{perks.map((k) => <li><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={k.i} /></span><div><strong>{k.t}</strong><span>{k.d}</span></div></li>)}</ul>
+              </aside>
+            )}
+            {i === 5 && (
+              <aside class="banner b2" data-banner aria-label="Book your stay">
+                <div class="b2-r"><strong>{google.rating.toFixed(1)}</strong><span class="st" aria-hidden="true">★★★★★</span><span class="mono">{google.count} Google reviews</span></div>
+                <div class="b2-c"><h2>Need several apartments for a team?</h2><p>{corporate.why[0].d.split(/(?<=\.)\s/)[0]}</p></div>
+                <a class="btn white" href="/contact">Book your stay <span class="arr">→</span></a>
+              </aside>
+            )}
+          </>
+        ))}
+      </div>
     </div>
   </section>
   <section class="sec dark spec">
@@ -44,6 +71,23 @@ const areas = ['All', 'Pontcanna', 'Cardiff Bay'];
   .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px 22px; }
   .grid :global([hidden]) { display: none !important; }
   .spec h2 { color: #fff; margin: 0; }
+  .banner { grid-column: 1 / -1; border-radius: var(--r); padding: clamp(22px, 3vw, 36px); background: linear-gradient(120deg, #e8edfb, #f6f1e7); }
+  .banner h2 { font-size: var(--fs-display-3); margin-bottom: 20px; }
+  .banner ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+  .banner li { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 14px; align-items: start; }
+  .banner .ic { width: 52px; height: 52px; border-radius: 14px; background: #fff; display: grid; place-items: center; box-shadow: 0 10px 24px -14px rgba(10,20,48,.35); }
+  .banner .ic svg { width: 26px; height: 26px; fill: none; stroke: var(--blue); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .banner strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+  .banner li span:not(.ic) { color: var(--muted); font-size: .94rem; line-height: 1.45; }
+  .b2 { background: var(--blue); color: #fff; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 28px; align-items: center; }
+  .b2 h2 { color: #fff; margin: 0 0 6px; }
+  .b2 p { color: #dfe5fb; margin: 0; }
+  .b2-r { display: grid; justify-items: center; gap: 2px; padding-right: 28px; border-right: 1px solid rgba(255,255,255,.2); }
+  .b2-r strong { font: 760 2.4rem/1 var(--f-display); }
+  .b2-r .st { color: var(--star); letter-spacing: 2px; }
+  .b2-r .mono { font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: #c9d3f7; }
+  .grid.filtered .banner { display: none; }
+  @media (max-width: 900px) { .banner ul { grid-template-columns: minmax(0, 1fr); } .b2 { grid-template-columns: minmax(0, 1fr); } .b2-r { border: 0; padding: 0; justify-items: start; grid-auto-flow: column; align-items: baseline; gap: 10px; } .b2 .btn { width: 100%; } }
   .spec .btn { margin-top: 10px; }
   @media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 640px) { .grid { grid-template-columns: minmax(0, 1fr); } }
@@ -52,6 +96,7 @@ const areas = ['All', 'Pontcanna', 'Cardiff Bay'];
   const bs = document.querySelectorAll<HTMLButtonElement>('[data-f]');
   bs.forEach((b) => b.addEventListener('click', () => {
     bs.forEach((x) => x.classList.toggle('on', x === b));
+    document.querySelector('.grid')?.classList.toggle('filtered', b.dataset.f !== 'All');
     document.querySelectorAll<HTMLElement>('[data-area]').forEach((c) => { c.hidden = b.dataset.f !== 'All' && c.dataset.area !== b.dataset.f; c.style.opacity = '1'; c.style.transform = 'none'; });
   }));
 </script>

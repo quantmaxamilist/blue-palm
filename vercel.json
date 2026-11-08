@@ -61,6 +61,61 @@
       "source": "/book-your-stay",
       "destination": "/contact",
       "permanent": true
+    },
+    {
+      "source": "/serviceaccommadation",
+      "destination": "/serviced-accommodation-cardiff",
+      "permanent": true
+    },
+    {
+      "source": "/contact-1",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/listings",
+      "destination": "/properties",
+      "permanent": true
+    },
+    {
+      "source": "/our-rentals",
+      "destination": "/properties",
+      "permanent": true
+    },
+    {
+      "source": "/rentals",
+      "destination": "/properties",
+      "permanent": true
+    },
+    {
+      "source": "/vacation-rentals",
+      "destination": "/properties",
+      "permanent": true
+    },
+    {
+      "source": "/agents-landlordsResults",
+      "destination": "/agents-landlords",
+      "permanent": true
+    },
+    {
+      "source": "/Results",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/blog-post-title-two-t5my5-k4xmd-67jzh-7c479",
+      "destination": "/blog/why-more-cardiff-landlords-are-choosing-corporate-lets",
+      "permanent": true
+    },
+    {
+      "source": "/blog/blog-post-title-three-y3peb-4lwnz-5pkhf-8nfwj",
+      "destination": "/blog/how-guaranteed-rent-is-helping-landlords-avoid-negative-cash-flow",
+      "permanent": true
+    },
+    {
+      "source": "/blog/blog-post-title-four-lr658-tcthp-wf5mw-p62tb",
+      "destination": "/blog/why-serviced-apartments-are-beating-hotels-for-long-term-stays",
+      "permanent": true
     }
   ],
   "headers": [

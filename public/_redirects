@@ -1,8 +1,8 @@
 /homepage-1 / 301
 /landlord /agents-landlords 301
 /cart / 301
-/blog/tag/* /blog 301
-/blog/category/* /blog 301
+/blog/tag/:tag /blog 301
+/blog/category/:cat /blog 301
 /see-all-amenities-1 /hamilton-top-floor 301
 /see-all-amenities-2 /fairleigh-road-2 301
 /see-all-amenities-3 /hamilton-ground-floor 301
@@ -10,3 +10,14 @@
 /see-all-amenities-5 /penhill-rd 301
 /home / 301
 /book-your-stay /contact 301
+/serviceaccommadation /serviced-accommodation-cardiff 301
+/contact-1 /contact 301
+/listings /properties 301
+/our-rentals /properties 301
+/rentals /properties 301
+/vacation-rentals /properties 301
+/agents-landlordsResults /agents-landlords 301
+/Results / 301
+/blog/blog-post-title-two-t5my5-k4xmd-67jzh-7c479 /blog/why-more-cardiff-landlords-are-choosing-corporate-lets 301
+/blog/blog-post-title-three-y3peb-4lwnz-5pkhf-8nfwj /blog/how-guaranteed-rent-is-helping-landlords-avoid-negative-cash-flow 301
+/blog/blog-post-title-four-lr658-tcthp-wf5mw-p62tb /blog/why-serviced-apartments-are-beating-hotels-for-long-term-stays 301

@@ -18,7 +18,7 @@ export const GET: APIRoute = () => new Response(`# Blue Palm Corporate Housing C
 - [Properties](${SITE}/properties)
 - [Guaranteed rent for landlords + income calculator](${SITE}/agents-landlords): ${landlords.intro}
 - [Serviced accommodation management](${SITE}/management)
-- [Pontcanna](${SITE}/pontcanna) · [Cardiff Bay](${SITE}/cardiff-bay) · [About](${SITE}/aboutus) · [Book your stay](${SITE}/contact) · [Landlord assessment](${SITE}/contact-1)
+- [Pontcanna](${SITE}/pontcanna) · [Cardiff Bay](${SITE}/cardiff-bay) · [About](${SITE}/aboutus) · [Book your stay](${SITE}/contact) · [Landlord assessment](${SITE}/agents-landlords#valuation)
 
 ## Apartments
 ${properties.map((p) => `- [${p.name}](${SITE}/${p.slug}): ${p.spec}, sleeps ${p.sleeps}`).join('\n')}

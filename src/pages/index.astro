@@ -13,23 +13,6 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
   <HomeHero />
   <Clients />
 
-  <section class="sec living" aria-labelledby="liv-h">
-    <div class="wrap liv">
-      <div class="liv-copy">
-        <p class="kicker" data-reveal>Pontcanna, Cardiff</p>
-        <h2 id="liv-h" data-reveal=".05">{home.designedH}</h2>
-        <p data-reveal=".1">{home.designed}</p>
-        <p class="statement" data-reveal=".12">{home.ideal}</p>
-        <a class="btn" href="/contact" data-reveal=".15">Book your stay <span class="arr">→</span></a>
-      </div>
-      <div class="liv-pics">
-        <div class="ph a" data-reveal><Pic k="misc-7" alt="Victorian terraced street in Pontcanna, Cardiff" sizes="(max-width: 880px) 70vw, 30vw" w={800} /></div>
-        <div class="ph b" data-reveal=".08"><Pic k="hamilton-top-floor-1" alt="Living room with yellow sofa in a Blue Palm apartment on Hamilton Street" sizes="(max-width: 880px) 80vw, 34vw" /></div>
-        <div class="ph c" data-reveal=".14"><Pic k="wyndham-crescent-10" alt="Styled sideboard in a Blue Palm Wyndham Crescent apartment" sizes="(max-width: 880px) 50vw, 20vw" w={800} /></div>
-      </div>
-    </div>
-  </section>
-
   <section class="sec white props" aria-labelledby="pr-h">
     <div class="wrap">
       <div class="pr-head">
@@ -49,6 +32,23 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
         </article>
       ))}
       <div class="more" data-reveal><a class="btn ghost" href="/properties">See all {properties.length} apartments <span class="arr">→</span></a></div>
+    </div>
+  </section>
+
+  <section class="sec living" aria-labelledby="liv-h">
+    <div class="wrap liv">
+      <div class="liv-copy">
+        <p class="kicker" data-reveal>Pontcanna, Cardiff</p>
+        <h2 id="liv-h" data-reveal=".05">{home.designedH}</h2>
+        <p data-reveal=".1">{home.designed}</p>
+        <p class="statement" data-reveal=".12">{home.ideal}</p>
+        <a class="btn" href="/contact" data-reveal=".15">Book your stay <span class="arr">→</span></a>
+      </div>
+      <div class="liv-pics">
+        <div class="ph a" data-reveal><Pic k="misc-7" alt="Victorian terraced street in Pontcanna, Cardiff" sizes="(max-width: 880px) 70vw, 30vw" w={800} /></div>
+        <div class="ph b" data-reveal=".08"><Pic k="hamilton-top-floor-1" alt="Living room with yellow sofa in a Blue Palm apartment on Hamilton Street" sizes="(max-width: 880px) 80vw, 34vw" /></div>
+        <div class="ph c" data-reveal=".14"><Pic k="wyndham-crescent-10" alt="Styled sideboard in a Blue Palm Wyndham Crescent apartment" sizes="(max-width: 880px) 50vw, 20vw" w={800} /></div>
+      </div>
     </div>
   </section>
 

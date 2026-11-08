@@ -1,19 +1,39 @@
 ---
 import type { Property } from '../data/site';
-interface Props { p: Property; compact?: boolean }
-const { p, compact = false } = Astro.props;
-const q = `${p.street}, ${p.area === 'Cardiff Bay' ? 'Cardiff Bay, ' : 'Pontcanna, '}Cardiff`;
-const src = `https://maps.google.com/maps?q=${encodeURIComponent(q)}&z=${compact ? 15 : 16}&output=embed`;
-const open = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+interface Props { p: Property }
+const { p } = Astro.props;
+const where = `${p.street}, ${p.area === 'Cardiff Bay' ? 'Cardiff Bay' : 'Pontcanna'}, Cardiff`;
+const src = (q: string, z = 16) => `https://maps.google.com/maps?q=${encodeURIComponent(q)}&z=${z}&output=embed`;
+const cats = [
+  { l: 'Supermarkets', q: 'supermarkets' }, { l: 'Restaurants', q: 'restaurants' }, { l: 'Cafes', q: 'cafes' }, { l: 'Gyms', q: 'gyms' },
+  { l: 'Parks', q: 'parks' }, { l: 'Parking', q: 'car parks' }, { l: 'Train stations', q: 'train stations' }, { l: 'Pharmacies', q: 'pharmacies' },
+];
+const open = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(where)}`;
 ---
-<div class:list={['pmap', { compact }]}>
-  <iframe src={src} title={`Map showing ${p.street}, ${p.area}`} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-  <a class="open mono" href={open} target="_blank" rel="noopener">Open in Google Maps ↗</a>
+<div class="pmap" data-pmap data-home={src(where)}>
+  <div class="chips" role="group" aria-label="Show nearby amenities">
+    <button type="button" class="on" aria-pressed="true" data-src={src(where)}>The apartment</button>
+    {cats.map((c) => <button type="button" aria-pressed="false" data-src={src(`${c.q} near ${where}`, 15)}>{c.l}</button>)}
+  </div>
+  <div class="frame">
+    <iframe src={src(where)} title={`Map of ${p.street}, ${p.area} and nearby amenities`} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+    <a class="open mono" href={open} target="_blank" rel="noopener">Open in Google Maps ↗</a>
+  </div>
 </div>
 <style>
-  .pmap { position: relative; border-radius: var(--r); overflow: hidden; border: 1px solid var(--line); background: #e9edf6; aspect-ratio: 16 / 7; }
-  .pmap.compact { aspect-ratio: 16 / 9; margin-top: 14px; }
+  .chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 14px; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chips button { flex: none; font: 600 .9rem/1 var(--f-body); padding: 11px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--text); cursor: pointer; transition: background .2s, color .2s; }
+  .chips button:hover { border-color: var(--blue); }
+  .chips button.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .frame { position: relative; border-radius: var(--r); overflow: hidden; border: 1px solid var(--line); background: #e9edf6; aspect-ratio: 16 / 7; }
   iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   .open { position: absolute; right: 10px; bottom: 10px; background: #fff; color: var(--blue); font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; padding: 7px 10px; border-radius: 999px; text-decoration: none; box-shadow: 0 6px 16px -8px rgba(0,0,0,.4); }
-  @media (max-width: 700px) { .pmap { aspect-ratio: 4 / 3; } }
+  @media (max-width: 700px) { .frame { aspect-ratio: 4 / 5; } }
 </style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-pmap]').forEach((m) => {
+    const f = m.querySelector('iframe')!; const bs = m.querySelectorAll<HTMLButtonElement>('[data-src]');
+    bs.forEach((b) => b.addEventListener('click', () => { bs.forEach((x) => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); }); f.src = b.dataset.src!; }));
+  });
+</script>

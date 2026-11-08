@@ -6,16 +6,29 @@ import Pic from '../components/Pic.astro';
 import PropertyCard from '../components/PropertyCard.astro';
 import Faq from '../components/Faq.astro';
 import GoogleReviews from '../components/GoogleReviews.astro';
-import { corporate as c, properties, SITE } from '../data/site';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import StickyCta from '../components/StickyCta.astro';
+import { corporate as c, properties, SITE, google } from '../data/site';
 const crumbs = [{ name: 'Corporate', path: '/serviced-accommodation-cardiff' }];
 const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: c.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
 const svc = { '@context': 'https://schema.org', '@type': 'Service', name: 'Corporate accommodation & serviced apartments in Cardiff', serviceType: 'Corporate housing', provider: { '@id': SITE + '/#business' }, areaServed: { '@type': 'City', name: 'Cardiff' }, audience: c.who.map((w) => ({ '@type': 'Audience', audienceType: w.t })) };
 ---
 <Base title={c.title} desc={c.desc} crumbs={crumbs} schema={[faqLd, svc]}>
   <PageHero kicker="For companies, productions & contractors" h1={c.h1} sub={c.h1sub} lede={c.intro[0]} crumbs={crumbs} photo="hamilton-top-floor-2" photoAlt="Open-plan living room with yellow sofa in a Blue Palm apartment, Pontcanna">
-    <a class="btn white" href="/contact">Let's connect <span class="arr">→</span></a>
+    <a class="btn white" href="#enquire">Check availability <span class="arr">→</span></a>
     <a class="btn ghost light" href="/properties">Browse our current apartments</a>
+    <a class="grate mono" href="#google-reviews">★ {google.rating.toFixed(1)} on Google · {google.count} reviews</a>
   </PageHero>
+  <section class="sec enq" id="enquire" aria-labelledby="enq-h">
+    <div class="wrap split">
+      <div>
+        <p class="kicker">Check availability</p>
+        <h2 id="enq-h">Tell us your dates. We’ll come back with availability and a clear price.</h2>
+        <ul class="ticks">{c.why.map((w) => <li><span><strong>{w.t}.</strong> {w.d.split(/(?<=\.)\s/)[0]}</span></li>)}</ul>
+      </div>
+      <div class="card"><EnquiryForm id="corp-enquiry" compact /></div>
+    </div>
+  </section>
   <Clients />
   <section class="sec">
     <div class="wrap split">
@@ -34,14 +47,14 @@ const svc = { '@context': 'https://schema.org', '@type': 'Service', name: 'Corpo
           </article>
         ))}
       </div>
-      <a class="btn white" href="/contact" data-reveal>Contact Our Team Today <span class="arr">→</span></a>
+      <a class="btn white" href="#enquire" data-reveal>Check availability <span class="arr">→</span></a>
     </div>
   </section>
   <section class="sec white">
     <div class="wrap">
       <div class="bh"><div><p class="kicker" data-reveal>For business</p><h2 data-reveal=".05">{c.bizH}</h2></div><p class="lede" data-reveal=".1">{c.biz}</p></div>
       <div class="biz">{c.bizItems.map((b, i) => <div class="card" data-reveal={String((i % 3) * 0.05)}><h3>{b.t}</h3><p>{b.d}</p></div>)}</div>
-      <a class="btn" href="/contact" data-reveal>Work With Us <span class="arr">→</span></a>
+      <a class="btn" href="#enquire" data-reveal>Check availability <span class="arr">→</span></a>
     </div>
   </section>
   <section class="sec incl">
@@ -61,8 +74,14 @@ const svc = { '@context': 'https://schema.org', '@type': 'Service', name: 'Corpo
   </section>
   <Faq items={c.faq} />
   <GoogleReviews tone="light" />
+  <StickyCta always />
 </Base>
 <style>
+  .enq { padding-block: clamp(36px, 6vw, 90px); scroll-margin-top: 80px; }
+  .enq h2 { font-size: var(--fs-display-3); }
+  .enq .ticks { margin-top: 18px; color: var(--muted); }
+  :global(.grate) { flex-basis: 100%; color: #dfe5fb; font-size: .78rem; letter-spacing: .06em; text-decoration: none; }
+  @media (max-width: 880px) { .enq .ticks { display: none; } }
   .why { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; }
   .why li { border-top: 1px solid var(--line); padding: 24px 0; display: grid; grid-template-columns: 52px minmax(0, 1fr); column-gap: 14px; }
   .why li:last-child { border-bottom: 1px solid var(--line); }

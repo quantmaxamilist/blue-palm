@@ -1,9 +1,8 @@
 ---
 import Pic from './Pic.astro';
-import PropertyMap from './PropertyMap.astro';
 import type { Property } from '../data/site';
-interface Props { p: Property; i?: number; map?: boolean }
-const { p, i = 0, map = false } = Astro.props;
+interface Props { p: Property; i?: number }
+const { p, i = 0 } = Astro.props;
 ---
 <div class="pcw" data-area={p.area} data-reveal={String((i % 3) * 0.06)}>
 <a class="pc" href={`/${p.slug}`}>
@@ -13,7 +12,6 @@ const { p, i = 0, map = false } = Astro.props;
   <p class="d">{p.card}</p>
   <span class="link">View apartment <span aria-hidden="true">→</span></span>
 </a>
-{map && <PropertyMap p={p} compact />}
 </div>
 <style>
   .pcw { display: flex; flex-direction: column; }
