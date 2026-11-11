@@ -125,3 +125,8 @@ html:not(.js) [data-reveal], .reduced [data-reveal] { opacity: 1; transform: non
 }
 
 @media (max-width: 380px) { .btn { white-space: normal; text-align: center; line-height: 1.2; padding-block: .7em; } }
+
+/* Seamless flow: two same-colour sections in a row share one gap instead of two */
+.sec:not(.white):not(.dark):not(.blue):not(.green) + .sec:not(.white):not(.dark):not(.blue):not(.green),
+.sec.white + .sec.white { padding-top: 0; }
+@media (max-width: 760px) { :root { --sec: 56px; } }

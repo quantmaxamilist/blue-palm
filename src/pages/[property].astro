@@ -6,7 +6,7 @@ import StickyCta from '../components/StickyCta.astro';
 import PropertyCard from '../components/PropertyCard.astro';
 import EnquiryForm from '../components/EnquiryForm.astro';
 import GoogleReviews from '../components/GoogleReviews.astro';
-import { properties, corporateRates, yourStay, corporate, SITE, img, google } from '../data/site';
+import { properties, corporateRates, yourStay, corporate, SITE, img, google, amenities } from '../data/site';
 export function getStaticPaths() { return properties.map((p) => ({ params: { property: p.slug }, props: { p } })); }
 const { p } = Astro.props;
 const others = properties.filter((x) => x.slug !== p.slug).sort((a, b) => (a.area === p.area ? -1 : 1) - (b.area === p.area ? -1 : 1)).slice(0, 3);
@@ -47,6 +47,16 @@ const facts = [
       <div class="details">
         <h2>About this home</h2>
         {p.details.map((d) => <p>{d}</p>)}
+        {amenities[p.slug] && (
+          <details class="amen">
+            <summary><span>Amenities</span><span class="cnt mono">{amenities[p.slug].reduce((n, g) => n + g.items.length, 0)} items</span></summary>
+            <div class="amen-in">
+              {amenities[p.slug].map((g) => (
+                <div class="ag"><h3 class="mono">{g.h}</h3><ul>{g.items.map((x) => <li>{x}</li>)}</ul></div>
+              ))}
+            </div>
+          </details>
+        )}
         {p.review && (
           <figure class="rev"><span class="st" aria-label="5 out of 5 stars">★★★★★</span><blockquote>“{p.review.q}”</blockquote><figcaption>— {p.review.n}</figcaption></figure>
         )}
@@ -55,7 +65,7 @@ const facts = [
         <div class="card">
           <p class="kicker">Your stay with Blue Palm</p>
           <p>{yourStay}</p>
-          <ul class="ticks">{corporate.why.map((w) => <li><span><strong>{w.t}.</strong> {w.d.split('.')[0]}.</span></li>)}</ul>
+          <ul class="ticks">{corporate.why.filter((w) => w.t !== 'Multi units').map((w) => <li><span><strong>{w.t}.</strong> {w.d.split('.')[0]}.</span></li>)}</ul>
           <p class="rates">{corporateRates}</p>
           <a class="btn" href={`/contact?package=${p.slug}`}>Request Corporate Rates <span class="arr">→</span></a>
           <a class="glink" href={google.url} target="_blank" rel="noopener">★ {google.rating.toFixed(1)} on Google · {google.count} reviews</a>
@@ -72,9 +82,9 @@ const facts = [
     </div>
   </section>
   <section class="sec white" id="book" aria-labelledby="bk-h">
-    <div class="wrap split">
+    <div class="wrap split" data-land>
       <div><p class="kicker">Book your stay</p><h2 id="bk-h">Enquire about {p.street}</h2><p class="lede">Tell us a little about your dates and what brings you to Cardiff. We’ll come back with availability, a clear price and the right answers.</p></div>
-      <div class="card"><EnquiryForm property={p.slug} /></div>
+      <div class="card" data-land-m><EnquiryForm property={p.slug} /></div>
     </div>
   </section>
   <section class="sec more">
@@ -113,4 +123,16 @@ const facts = [
   @media (max-width: 900px) { .grid3 { grid-template-columns: minmax(0, 1fr); } .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .facts li:nth-child(3) { border-left: 0; } .facts li:nth-child(n + 3) { border-top: 1px solid var(--line); } .side .card { position: static; } .top { padding-top: 100px; } }
   .loc { padding-top: 0; overflow-x: clip; }
   .loc-l { margin-bottom: 18px; }
+  .amen { margin: 28px 0 8px; border: 1px solid var(--line); border-radius: var(--r-s, 14px); background: #fff; }
+  .amen summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 18px 20px; font: 650 1.15rem/1.2 var(--f-display); color: var(--ink); }
+  .amen summary::-webkit-details-marker { display: none; }
+  .amen summary .cnt { margin-left: auto; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+  .amen summary::after { content: ''; width: 26px; height: 26px; border-radius: 50%; background: var(--blue-soft, #eef1fb) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5' fill='none' stroke='%23213d99' stroke-width='2'/%3E%3C/svg%3E") center/16px no-repeat; transition: transform .3s; flex: none; }
+  .amen[open] summary::after { transform: rotate(180deg); }
+  .amen-in { padding: 0 20px 20px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; border-top: 1px solid var(--line); padding-top: 18px; }
+  .ag h3 { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--blue); font-weight: 500; margin: 0 0 8px; }
+  .ag ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .ag li { position: relative; padding-left: 18px; font-size: .95rem; color: var(--text); }
+  .ag li::before { content: ''; position: absolute; left: 0; top: .55em; width: 8px; height: 5px; border: solid var(--blue); border-width: 0 0 1.6px 1.6px; transform: rotate(-45deg); }
+  @media (max-width: 620px) { .amen-in { grid-template-columns: minmax(0, 1fr); } }
 </style>

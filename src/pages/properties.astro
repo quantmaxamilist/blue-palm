@@ -9,14 +9,11 @@ const crumbs = [{ name: 'Properties', path: '/properties' }];
 const listLd = { '@context': 'https://schema.org', '@type': 'ItemList', name: pp.h1, itemListElement: properties.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/${p.slug}`, name: p.name })) };
 const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: pp.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
 const areas = ['All', 'Pontcanna', 'Cardiff Bay'];
-const icons: Record<string, string> = {
-  'Multi units': '<path d="M3 21V9l6-4 6 4v12M9 21v-5h0M15 21h6V11l-6-3" />',
-  'Bills included': '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 16h3" />',
-  'Cleaning & Linen': '<path d="M4 11h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM7 11V6a3 3 0 0 1 6 0M16 7l3-3" />',
-  'Dedicated Contact': '<path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0" />',
-};
-const first = (d: string) => { const s = d.split(/(?<=\.)\s/); return s[0].length < 40 ? s.slice(0, 2).join(" ") : s[0]; };
-const perks = corporate.why.slice(0, 3).map((w) => ({ t: w.t, d: first(w.d), i: icons[w.t] }));
+const perks = [
+  { t: 'Bills Included', d: 'No hidden fees. Electricity, water, high-speed Wi-Fi and Netflix are all included in every booking.', i: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 16h3" />' },
+  { t: 'Prime Locations', d: 'Spacious, well-laid-out homes within walking distance of restaurants, bars and attractions.', i: '<path d="M12 21s7-6.2 7-11.5a7 7 0 1 0-14 0C5 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" />' },
+  { t: 'Cleaning & Linen', d: 'Regular cleaning and fresh linen changes, so your team can focus on work and relaxing, not household admin.', i: '<path d="M4 11h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM7 11V6a3 3 0 0 1 6 0M16 7l3-3" />' },
+]; // [client] copy supplied Nov 2026
 ---
 <Base title={pp.title} desc={pp.desc} crumbs={crumbs} schema={[listLd, faqLd]}>
   <PageHero kicker="Properties" h1={pp.h1} lede={pp.intro[0]} crumbs={crumbs} photo="wyndham-crescent-1" photoAlt="Bright living room in a Blue Palm apartment on Wyndham Crescent, Pontcanna">

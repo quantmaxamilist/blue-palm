@@ -2,35 +2,77 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import PropertyCard from '../components/PropertyCard.astro';
-import { pontcanna as pc, home, properties, SITE } from '../data/site';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import { pontcanna as pc, home, properties, contact, SITE } from '../data/site';
 const crumbs = [{ name: 'Pontcanna', path: '/pontcanna' }];
 const place = { '@context': 'https://schema.org', '@type': 'Place', name: 'Pontcanna, Cardiff', geo: { '@type': 'GeoCoordinates', latitude: 51.488, longitude: -3.199 }, containedInPlace: { '@type': 'City', name: 'Cardiff' }, url: SITE + '/pontcanna' };
-const icons = ['🍽', '🥐', '☕', '🧺', '🍺', '🌳'];
+const local = properties.filter((p) => p.area === 'Pontcanna');
+// Line icons in the same stroke style as the rest of the site
+const icons: Record<string, string> = {
+  Restaurants: '<path d="M7 3v8a2 2 0 0 0 2 2v8M5 3v6M9 3v6M17 21V3c-2 1.5-3 4-3 7v3h3" />',
+  Bakeries: '<path d="M4 15c0-4.4 3.6-8 8-8s8 3.6 8 8v2H4z" /><path d="M9 8.5l1.5 8.5M15 8.5l-1.5 8.5" />',
+  Cafes: '<path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 10h1.5a2.5 2.5 0 0 1 0 5H17M8 3v3M12 3v3" />',
+  Markets: '<path d="M3 9l1.5-5h15L21 9M3 9h18M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0M5 12v8h14v-8" />',
+  'Bars & Pubs': '<path d="M6 3h10l-1 18H7zM6.5 8h9M16 7h2a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2.4" />',
+  Parks: '<path d="M12 21v-6M12 15l-4-4M12 13l3-3" /><path d="M12 3a6 6 0 0 0-6 6c0 3.3 2.7 6 6 6s6-2.7 6-6a6 6 0 0 0-6-6z" />',
+};
+const rest = pc.items;
 ---
 <Base title={pc.title} desc={pc.desc} crumbs={crumbs} schema={[place]}>
   <PageHero kicker="Pontcanna, Cardiff" h1={pc.h1} lede={pc.lede} crumbs={crumbs} photo="misc-7" photoAlt="Victorian terraces on a leafy Pontcanna street, Cardiff">
-    <a class="btn white" href="/contact">Message us <span class="arr">→</span></a>
+    <a class="btn white" href="#book">Enquire to stay <span class="arr">→</span></a>
   </PageHero>
+
   <section class="sec">
-    <div class="wrap">
-      <p class="statement intro" data-reveal>{home.designed}</p>
-      <div class="items">{pc.items.map((x, i) => <article data-reveal={String((i % 3) * 0.05)}><span class="ic" aria-hidden="true">{icons[i]}</span><h2 class="h">{x.t}</h2><p>{x.d}</p></article>)}</div>
+    <div class="wrap split">
+      <div><p class="kicker" data-reveal>Pontcanna, Cardiff</p><h2 data-reveal=".05">{home.designedH}</h2><p class="lede" data-reveal=".1">{home.designed}</p></div>
+      <div class="facts">{pc.facts.map((f) => <div data-reveal><strong>{f.n}</strong><span>{f.d}</span></div>)}<p data-reveal>{home.ideal}</p></div>
     </div>
   </section>
+
+  <section class="sec white">
+    <div class="wrap">
+      <div class="lh"><p class="kicker" data-reveal>On your doorstep</p><h2 data-reveal=".05">Everything within walking distance</h2></div>
+      <div class="items">
+        {rest.map((x, i) => (
+          <article data-reveal={String((i % 3) * 0.05)}>
+            <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={icons[x.t]} /></span>
+            <h3>{x.t}</h3><p>{x.d}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <section class="sec white">
     <div class="wrap">
       <h2>Our Pontcanna apartments</h2>
-      <div class="grid3">{properties.filter((p) => p.area === 'Pontcanna').map((p, i) => <PropertyCard p={p} i={i} />)}</div>
+      <div class="grid3">{local.map((p, i) => <PropertyCard p={p} i={i} />)}</div>
+    </div>
+  </section>
+
+  <section class="sec" id="book">
+    <div class="wrap split" data-land>
+      <div><p class="kicker" data-reveal>Enquiry</p><h2 data-reveal=".05">Book Your Stay</h2><p class="lede" data-reveal=".1">Tell us a little about your dates and what brings you to Cardiff. We’ll come back with availability, a clear price and the right answers.</p><p class="mono" data-reveal>{contact.reply}</p></div>
+      <div class="card" data-land-m><EnquiryForm /></div>
     </div>
   </section>
 </Base>
 <style>
-  .intro { max-width: 46ch; margin-bottom: 60px; }
-  .items { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 28px; }
-  .items article { border-top: 2px solid var(--blue); padding-top: 22px; }
-  .ic { font-size: 1.6rem; }
-  .h { font-size: 1.7rem; margin: 10px 0 8px; }
-  .items p { color: var(--muted); }
-  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 22px; margin-top: 30px; }
+  .facts { display: grid; gap: 18px; }
+  .facts div { display: grid; gap: 4px; border-top: 1px solid var(--line); padding-top: 16px; }
+  .facts strong { font: 760 var(--fs-display-3)/1 var(--f-display); color: var(--blue); }
+  .facts span, .facts p { color: var(--muted); }
+  .lh { margin-bottom: 36px; } .lh h2 { margin: 0; }
+  .items { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .items article { border: 1px solid var(--line); border-radius: var(--r-s); padding: 24px; background: var(--paper); }
+  .ic { width: 46px; height: 46px; border-radius: 12px; background: #fff; display: grid; place-items: center; box-shadow: 0 10px 24px -14px rgba(10,20,48,.35); }
+  .ic svg { width: 24px; height: 24px; fill: none; stroke: var(--blue); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .items h3 { font-size: 1.3rem; margin: 16px 0 6px; }
+  .items p { color: var(--muted); margin: 0; font-size: .97rem; }
+  .wide { aspect-ratio: 4/3; }
+  .w { color: #fff; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 30px; }
+  .mono { font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--blue); }
   @media (max-width: 900px) { .items, .grid3 { grid-template-columns: minmax(0, 1fr); } }
 </style>

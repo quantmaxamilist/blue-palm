@@ -420,7 +420,7 @@ export const management = {
   intro: [
     'Professional management for property owners who want to access Cardiff’s serviced accommodation and corporate-stay market—without running the operation themselves.',
     'Blue Palm manages your property for a 15% management fee, covering pricing, listings, bookings, guests, cleaning coordination, maintenance support and performance reporting.',
-    'Unlike standard Airbnb-management services, we also leverage our established corporate-booking relationships to pursue longer stays and create more consistent property performance.',
+    'Unlike standard Airbnb-management services, we also offer the opportunity to benefit from our established corporate-booking relationships through an optional, separately agreed service, helping secure longer stays and create more consistent property performance.',
   ], // [V]
   small: '15% management fee • No long-term lease • Owner retains the income', // [V]
   moreK: 'More than Airbnb management', // [V]
@@ -492,11 +492,50 @@ export const about = {
   ], // [V]
 };
 
+
+// ───────────────── AMENITIES (per property) ─────────────────
+// [V] from the old site's "See all amenities" pages (/see-all-amenities-1…5) and amenity graphics on each property page.
+export type AmenityGroup = { h: string; items: string[] };
+const dining = { h: 'Dining', items: ['Cooking basics', 'Coffee machine (Nescafé Dolce Gusto)', 'Dishes & silverware', 'Fridge freezer', 'Stove', 'Oven', 'Microwave', 'Toaster'] };
+const safety = { h: 'Safety', items: ['First aid kit', 'Fire extinguisher', 'Smoke alarm', 'Video doorbell'] };
+const bedBath = (bath: boolean) => ({ h: 'Bed & bath', items: ['Hair dryer', 'Clothes hangers, rails & chest of drawers', 'Hotel-grade bed linen, changed weekly', 'Shampoo, soap & body wash', ...(bath ? ['Bath & shower over bath'] : [])] });
+const am1: AmenityGroup[] = [
+  { h: 'Key amenities', items: ['Fibre broadband — up to 100Mbps', 'Off-street private parking for one vehicle', 'Dishwasher', 'Washing machine', 'Tumble dryer', 'Clothes airer', 'Laptop-friendly workspace', 'Iron & ironing board', 'Smart TV with Netflix', 'Wi-Fi colour printer (paper provided)', 'Amazon Alexa'] },
+  dining, { h: 'Guest access', items: ['Self check-in with lockbox', 'Welcome gift'] }, bedBath(false), safety,
+];
+const am2: AmenityGroup[] = [
+  { h: 'Key amenities', items: ['Fibre broadband — up to 100Mbps', 'On-street parking (resident’s permit for stays of 6+ weeks, visitor’s permit for shorter stays)', 'Dishwasher', 'Washing machine', 'Tumble dryer', 'Laptop-friendly workspace', 'Iron & ironing board', 'Smart TV with Netflix', 'Wi-Fi colour printer (paper provided)', 'Amazon Alexa'] },
+  dining, { h: 'Guest access', items: ['Self check-in with lockbox', 'Private entrance', 'Welcome gift'] }, bedBath(true), safety,
+];
+const am3: AmenityGroup[] = [
+  { h: 'Key amenities', items: ['Fibre broadband — up to 100Mbps', 'Off-street private parking for one vehicle (extra resident permits can be arranged)', 'Dishwasher', 'Washing machine', 'Tumble dryer', 'Clothes airer', 'Laptop-friendly workspace', 'Iron & ironing board', 'Smart TV with Netflix', 'Amazon Alexa'] },
+  dining, { h: 'Guest access', items: ['Self check-in with lockbox', 'Welcome gift'] }, bedBath(true), safety,
+];
+const am4: AmenityGroup[] = [
+  { h: 'Key amenities', items: ['Fibre broadband — up to 100Mbps', 'Free on-street parking nearby (resident’s permit for stays of 6+ weeks)', 'Dishwasher', 'Washing machine', 'Clothes airer', 'Laptop-friendly workspace', 'Iron & ironing board', 'Smart TV with Netflix', 'Wi-Fi colour printer (paper provided)', 'Amazon Alexa'] },
+  { ...dining, items: dining.items.map((x) => (x.startsWith('Coffee') ? 'Coffee maker' : x)) }, { h: 'Guest access', items: ['Self check-in with lockbox', 'Private entrance'] }, bedBath(true), safety,
+];
+const am5: AmenityGroup[] = [
+  { h: 'Key amenities', items: ['Fibre broadband — up to 100Mbps', 'Free on-street parking nearby (permit-free spaces within a 30-second walk)', 'Dishwasher', 'Washing machine', 'Clothes airer', 'Laptop-friendly workspace', 'Iron & ironing board', 'Smart TV with Netflix', 'Amazon Alexa'] },
+  dining, { h: 'Guest access', items: ['Self check-in with lockbox', 'Shared entrance (with one other apartment)', 'Welcome gift'] }, bedBath(true), safety,
+];
+const amWyn1: AmenityGroup[] = [{ h: 'Amenities', items: ['Free parking', 'Super fast Wi-Fi', 'Clean & hygienic', 'Smart TV with Netflix', 'Washer/dryer machine', 'Laptop-friendly workspace', 'Hair dryer', 'Iron', 'Weekly clean & linen change'] }];
+const amCath: AmenityGroup[] = [{ h: 'Amenities', items: ['Free parking', 'Super fast Wi-Fi', 'Clean & hygienic', 'Smart TV with Netflix', 'Washing machine', 'Laptop-friendly workspace', 'Hair dryer', 'Iron', 'Weekly clean & linen change'] }];
+const amBay: AmenityGroup[] = [{ h: 'Amenities', items: ['Evening free parking', 'Super fast Wi-Fi', 'Clean & hygienic', 'En-suite bathrooms', 'Smart TV with Netflix', 'Coffee machine', 'Washing machine', 'Spacious apartment for home working', 'Hair dryer', 'Iron', 'Weekly clean & linen change', 'Dishwasher'] }];
+export const amenities: Record<string, AmenityGroup[]> = {
+  'hamilton-top-floor': am1, 'fairleigh-road-2': am2, 'hamilton-ground-floor': am3, 'wyndham-crescent': am4,
+  'penhill-rd': am5, farleighroad: am5, 'wyndham-crescent-1': amWyn1, 'cathedral-rd': amCath, 'mount-square': amBay,
+};
+
 export const pontcanna = {
   title: 'Pontcanna | Explore Pontcanna today – Book your stay now — Blue Palm Corporate Housing Cardiff', // [V]
   desc: 'Discover premium corporate housing and rental properties in Pontcanna, Cardiff. Enjoy local amenities, parks, restaurants, and cafes with Blue Palm Corporate Housing.', // [V]
   h1: 'Your Home Away From Home.', // [V]
   lede: 'This prime location gives guests the comfort of a well-laid-out home with the convenience of walking distance to restaurants, bars and attractions', // [V]
+  facts: [
+    { n: '5 Minutes', d: 'From Bute Park and the River Taff.' },
+    { n: '10 Minutes', d: 'Walk to Cardiff city centre.' },
+  ], // [V] from the Pontcanna copy on the old homepage
   items: [
     { t: 'Restaurants', d: 'Pontcanna houses some of the best restaurants in the city, all within walking distance of our properties. We recommend Thomas or Heaney’s for upmarket options, Nook for more casual sharing plates, or Dough Thrower for tasty pizzas.' },
     { t: 'Bakeries', d: 'We are fortunate to have one of the city’s best bakeries, Alex Gooch, in King’s Yard Pontcanna. Other great local bakeries for bread and pastries include the Danish bakery Brod and Pettigrew Bakery.' },

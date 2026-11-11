@@ -18,14 +18,14 @@ const howLd = { '@context': 'https://schema.org', '@type': 'HowTo', name: l.step
     <a class="btn ghost light" href="#open-calculator">Compare your rental profits →</a>
   </PageHero>
   <section class="sec val" id="valuation" aria-labelledby="val-h">
-    <div class="wrap split">
+    <div class="wrap split" data-land>
       <div>
         <p class="kicker">Free — no obligation</p>
         <h2 id="val-h">{l.ctaH}</h2>
         <p class="lede">{l.cta}</p>
         <ul class="ticks">{l.bp.slice(0, 4).map((t) => <li><span>{t}</span></li>)}</ul>
       </div>
-      <div class="card"><h3 class="fh">Get a rental valuation</h3><EnquiryForm kind="landlord" id="valuation-form" /></div>
+      <div class="card" data-land-m><h3 class="fh">Get a rental valuation</h3><EnquiryForm kind="landlord" id="valuation-form" /></div>
     </div>
   </section>
   <section class="sec">

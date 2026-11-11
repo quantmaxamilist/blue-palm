@@ -17,7 +17,7 @@ const adv = [
 ---
 <section class="calc sec dark" id="open-calculator" aria-labelledby="calc-h" data-calc>
   <div class="wrap">
-    <div class="c-head">
+    <div class="c-head" data-land>
       <p class="kicker">Free tool</p>
       <h2 id="calc-h">{landlords.calcH}</h2>
       <p class="lede">{landlords.calcSub}. Sliders are pre-set to UK market averages.</p>
@@ -153,7 +153,7 @@ const adv = [
     }));
     calc();
     // printed flyer QR codes link to #open-calculator — land on it and highlight
-    const open = () => { if (location.hash === '#open-calculator') { setTimeout(() => { (window as any).__lenis?.scrollTo(root, { offset: -80, immediate: true }) ?? root.scrollIntoView(); root.classList.add('flash'); setTimeout(() => root.classList.remove('flash'), 1800); root.querySelector<HTMLInputElement>('[data-in="rent"]')?.focus({ preventScroll: true }); }, 250); } };
+    const open = () => { if (location.hash === '#open-calculator') { setTimeout(() => { { const el = root.querySelector<HTMLElement>('[data-land]') || root; const off = (document.querySelector<HTMLElement>('[data-hdr]')?.offsetHeight ?? 84) + 20; (window as any).__lenis ? (window as any).__lenis.scrollTo(el, { offset: -off, immediate: true }) : scrollTo(0, el.getBoundingClientRect().top + scrollY - off); } root.classList.add('flash'); setTimeout(() => root.classList.remove('flash'), 1800); root.querySelector<HTMLInputElement>('[data-in="rent"]')?.focus({ preventScroll: true }); }, 250); } };
     open(); addEventListener('hashchange', open);
   }
 </script>

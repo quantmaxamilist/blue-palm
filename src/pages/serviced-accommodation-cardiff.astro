@@ -20,13 +20,13 @@ const svc = { '@context': 'https://schema.org', '@type': 'Service', name: 'Corpo
     <a class="grate mono" href="#google-reviews">★ {google.rating.toFixed(1)} on Google · {google.count} reviews</a>
   </PageHero>
   <section class="sec enq" id="enquire" aria-labelledby="enq-h">
-    <div class="wrap split">
+    <div class="wrap split" data-land>
       <div>
         <p class="kicker">Check availability</p>
         <h2 id="enq-h">Tell us your dates. We’ll come back with availability and a clear price.</h2>
         <ul class="ticks">{c.why.map((w) => <li><span><strong>{w.t}.</strong> {w.d.split(/(?<=\.)\s/)[0]}</span></li>)}</ul>
       </div>
-      <div class="card"><EnquiryForm id="corp-enquiry" compact /></div>
+      <div class="card" data-land-m><EnquiryForm id="corp-enquiry" compact /></div>
     </div>
   </section>
   <Clients />
