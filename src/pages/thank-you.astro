@@ -1,13 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/PageHero.astro';
-import { contact } from '../data/site';
+import Confirmation from '../components/Confirmation.astro';
 ---
 <Base title="Thank you — Blue Palm Corporate Housing Cardiff" desc="Your enquiry has been sent to Blue Palm." noindex band={false}>
-  <PageHero kicker="Enquiry sent" h1="Thank you — your enquiry is in." lede="We’ve received your booking enquiry and will come back with availability and a clear price. We usually reply within one working day.">
-    <a class="btn white" href="/properties">Browse apartments <span class="arr">→</span></a>
-    <a class="btn ghost light" href={`mailto:${contact.email}`}>{contact.email}</a>
-  </PageHero>
+  <Confirmation kind="stay" />
 </Base>
 <script is:inline>
   // Conversion event: fires only after a real form submission (redirect from the enquiry form).

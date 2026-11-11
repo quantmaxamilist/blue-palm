@@ -1,0 +1,94 @@
+---
+import { contact } from '../data/site';
+interface Props { kind: 'stay' | 'landlord' }
+const { kind } = Astro.props;
+const stay = kind === 'stay';
+const steps = stay
+  ? ['We check availability for your dates', 'We email you a clear price, usually within one working day', 'You confirm and we send your booking details']
+  : ['We review your property details', 'We contact you to arrange a free assessment', 'You get a clear rental valuation — no obligation'];
+---
+<section class="cf" data-cf data-kind={kind}>
+  <div class="glow" aria-hidden="true"></div>
+  <div class="wrap in">
+    <div class="card">
+      <div class="tick" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24" /><path d="M15 27l7.5 7.5L37 19" /></svg></div>
+      <p class="kicker">Enquiry sent</p>
+      <h1>Thank you<span data-cf-name></span>.</h1>
+      <p class="lede">{stay ? 'Your booking enquiry is with the Blue Palm team.' : 'Your valuation request is with the Blue Palm team.'}</p>
+
+      <div class="mail" data-cf-mail hidden>
+        <span class="lbl">We’ll reply to</span>
+        <span class="addr"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M4 7l8 6 8-6" /></svg><b data-cf-email></b></span>
+        <a class="fix" href="#" data-cf-fix>Not right? Fix your email →</a>
+      </div>
+
+      <dl class="sum" data-cf-sum hidden></dl>
+
+      <div class="next">
+        <p class="nh">What happens next</p>
+        <ol>{steps.map((s) => <li>{s}</li>)}</ol>
+        <p class="spam">Can’t see our reply? Check your junk folder, or email <a href={`mailto:${contact.email}`}>{contact.email}</a>.</p>
+      </div>
+
+      <div class="acts">
+        {stay ? <a class="btn" href="/properties">Browse apartments <span class="arr">→</span></a> : <a class="btn" href="/management">How management works <span class="arr">→</span></a>}
+        <a class="btn ghost" href="/">Back to home</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cf { position: relative; background: var(--ink); padding: clamp(130px, 14vw, 170px) 0 clamp(60px, 8vw, 100px); overflow: hidden; isolation: isolate; }
+  .glow { position: absolute; right: -14vw; top: -22vw; width: 64vw; aspect-ratio: 1; border-radius: 50%; background: var(--blue); opacity: .55; z-index: -1; }
+  .in { width: min(100% - 2 * var(--gut), 720px); margin-inline: auto; }
+  .card { background: var(--white); border-radius: 24px; padding: clamp(28px, 5vw, 52px); text-align: center; box-shadow: 0 40px 80px -40px rgba(0,0,0,.6); }
+  .tick { width: 76px; height: 76px; margin: 0 auto 18px; }
+  .tick svg { width: 100%; height: 100%; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .tick circle { stroke: var(--blue); stroke-width: 2.5; stroke-dasharray: 151; stroke-dashoffset: 151; animation: dr .7s .1s ease-out forwards; }
+  .tick path { stroke: var(--blue); stroke-width: 3.5; stroke-dasharray: 34; stroke-dashoffset: 34; animation: dr .4s .7s ease-out forwards; }
+  @keyframes dr { to { stroke-dashoffset: 0; } }
+  .kicker { font-family: var(--f-mono); font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--blue); margin: 0 0 10px; }
+  h1 { font-size: clamp(2rem, 4vw, 3rem); color: var(--text); margin: 0; }
+  .lede { color: var(--muted); margin: 10px auto 0; max-width: 46ch; }
+  .mail { margin: 28px auto 0; padding: 20px; border-radius: 18px; background: var(--blue-soft); display: grid; gap: 10px; justify-items: center; }
+  .lbl { font-size: .9rem; color: var(--muted); }
+  .addr { display: inline-flex; align-items: center; gap: 10px; max-width: 100%; background: var(--white); border: 1.5px solid var(--blue); border-radius: 999px; padding: 12px 20px; }
+  .addr svg { flex: none; width: 20px; height: 20px; fill: none; stroke: var(--blue); stroke-width: 1.8; }
+  .addr b { font-size: clamp(1rem, 2.6vw, 1.25rem); color: var(--text); overflow-wrap: anywhere; text-align: left; }
+  .fix { font-size: .92rem; font-weight: 600; color: var(--blue); }
+  .sum { margin: 22px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; text-align: left; }
+  .sum :global(div) { background: var(--white); padding: 14px 16px; }
+  .sum :global(dt) { font-family: var(--f-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .sum :global(dd) { margin: 4px 0 0; font-weight: 600; color: var(--text); overflow-wrap: anywhere; }
+  .next { margin-top: 26px; text-align: left; background: var(--paper); border-radius: 16px; padding: 20px 22px; }
+  .nh { font-weight: 700; margin: 0 0 10px; color: var(--text); }
+  ol { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; color: var(--text); }
+  .spam { margin: 14px 0 0; font-size: .88rem; color: var(--muted); }
+  .spam a { color: var(--blue); }
+  .acts { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 28px; }
+  @media (max-width: 560px) { .acts .btn { width: 100%; justify-content: center; } .card { border-radius: 20px; } }
+  @media (prefers-reduced-motion: reduce) { .tick circle, .tick path { animation: none; stroke-dashoffset: 0; } }
+</style>
+
+<script is:inline>
+  (function () {
+    var s = null; try { s = JSON.parse(sessionStorage.getItem('bp-sub') || 'null'); } catch (e) {}
+    var root = document.querySelector('[data-cf]'); if (!root || !s || s.kind !== root.getAttribute('data-kind')) return;
+    var first = (s.name || '').trim().split(/\s+/)[0];
+    if (first) root.querySelector('[data-cf-name]').textContent = ', ' + first;
+    if (s.email) {
+      root.querySelector('[data-cf-email]').textContent = s.email;
+      root.querySelector('[data-cf-fix]').setAttribute('href', (s.page || '/') + '?fix=1#' + (s.form || 'enquiry'));
+      root.querySelector('[data-cf-mail]').hidden = false;
+    }
+    function d(v) { var t = new Date(v + 'T12:00:00'); return isNaN(t) ? v : t.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }); }
+    var rows = s.kind === 'stay'
+      ? [['Apartment', s.apartment || 'Any available'], ['Check-in', s.check_in && d(s.check_in)], ['Check-out', s.check_out && d(s.check_out)], ['Guests', s.guests], ['Phone', s.phone]]
+      : [['Service', s.service], ['Postcode', s.postcode && s.postcode.toUpperCase()], ['Phone', s.phone]];
+    var dl = root.querySelector('[data-cf-sum]');
+    rows.forEach(function (r) { if (!r[1]) return; var w = document.createElement('div'); var dt = document.createElement('dt'); dt.textContent = r[0]; var dd = document.createElement('dd'); dd.textContent = r[1]; w.appendChild(dt); w.appendChild(dd); dl.appendChild(w); });
+    if (dl.children.length % 2) dl.lastElementChild.style.gridColumn = '1 / -1';
+    if (dl.children.length) dl.hidden = false;
+  })();
+</script>

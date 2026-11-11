@@ -78,6 +78,7 @@ const wa = contact.whatsapp ? `https://wa.me/${contact.whatsapp}?text=${encodeUR
   .wa:hover { text-decoration: underline; }
   .pp { font-size: .8rem; color: var(--muted); margin: 0; } .pp a { color: inherit; }
   .msg { margin: 0; font-weight: 600; min-height: 1.2em; }
+  :global(.fixme) input { outline: 2px solid var(--blue-2); outline-offset: 2px; }
   .msg.ok { color: #137a3d; } .msg.err { color: #b3261e; }
   @media (max-width: 620px) { .send .btn { width: 100%; } }
   @media (max-width: 340px) { .r2 { grid-template-columns: minmax(0, 1fr); } }
@@ -90,6 +91,21 @@ const wa = contact.whatsapp ? `https://wa.me/${contact.whatsapp}?text=${encodeUR
     const sel = form.querySelector<HTMLInputElement>('[data-prop]');
     if (pk && sel) sel.value = pk;
     const page = form.querySelector<HTMLInputElement>('[data-page]'); if (page) page.value = location.pathname;
+    if (q.get('fix') === '1') {
+      try {
+        const sub = JSON.parse(sessionStorage.getItem('bp-sub') || 'null');
+        if (sub && sub.form === form.id) {
+          Object.entries(sub).forEach(([k, v]) => {
+            const el = form.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(`[name="${k}"]:not([type=hidden]):not([type=radio])`);
+            if (el && typeof v === 'string') el.value = v;
+            const r = form.querySelector<HTMLInputElement>(`input[type=radio][name="${k}"][value="${CSS.escape(String(v))}"]`); if (r) r.checked = true;
+          });
+          const det = form.querySelector('details'); if (det && sub.message) (det as HTMLDetailsElement).open = true;
+          const e = form.querySelector<HTMLInputElement>('[data-email]');
+          if (e) setTimeout(() => { e.focus({ preventScroll: true }); e.select(); e.closest('label')?.classList.add('fixme'); }, 700);
+        }
+      } catch {}
+    }
     const svc = q.get('service');
     if (svc) form.querySelectorAll<HTMLInputElement>('[data-svc]').forEach((r) => (r.checked = r.dataset.svc === svc));
     const din = form.querySelector<HTMLInputElement>('[data-in]'); const dout = form.querySelector<HTMLInputElement>('[data-out]');
@@ -111,7 +127,12 @@ const wa = contact.whatsapp ? `https://wa.me/${contact.whatsapp}?text=${encodeUR
       try {
         const r = await fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) });
         const j = await r.json(); if (!j.success) throw new Error(j.message);
-        try { sessionStorage.setItem('bp-lead', form.dataset.kind || 'stay'); } catch {}
+        try {
+          sessionStorage.setItem('bp-lead', form.dataset.kind || 'stay');
+          const fd = new FormData(form); const keep: Record<string, string> = { kind: form.dataset.kind || 'stay', page: location.pathname, form: form.id };
+          ['name', 'email', 'phone', 'apartment', 'check_in', 'check_out', 'guests', 'message', 'postcode', 'service'].forEach((k) => { const v = fd.get(k); if (typeof v === 'string' && v.trim()) keep[k] = v.trim(); });
+          sessionStorage.setItem('bp-sub', JSON.stringify(keep));
+        } catch {}
         location.href = form.dataset.thanks || '/thank-you';
       } catch { msg.classList.add('err'); msg.textContent = 'Sorry, that didn’t send. Please email info@bluepalmproperty.co.uk.'; btn.disabled = false; }
     });
